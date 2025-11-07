@@ -3,7 +3,7 @@
 
     <div class="container-fluid">
       <!-- Marca o logo -->
-      <a class="navbar-brand" href="#"><img src="../assets/Paula.png" alt="logo" width="90"></a>
+      <a class="navbar-brand" href="#"><img src="../assets/Paula.png" alt="logo" width="50"></a>
 
       <!-- Botón de hamburguesa en pantallas pequeñas -->
       <button
@@ -59,4 +59,7 @@ import { RouterLink } from 'vue-router';
   color: #fff; /* blanco intenso al pasar el ratón */
 }
 
+.navbar.bg-danger {
+  background-color: #b02a37 !important;
+}
 </style>

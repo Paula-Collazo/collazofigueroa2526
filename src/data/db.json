@@ -404,7 +404,7 @@
       "direccion": "Calle Luna, 34",
       "provincia": "León",
       "municipio": "Acebedo",
-      "fecha_alta": "",
+      "fecha_alta": "2025-10-08",
       "historico": true
     }
   ],
@@ -427,5 +427,6 @@
       "contenido": "A pesar del firme respaldo de países como España y Francia a la meta de 2035 para prohibir la venta de coches nuevos con motores de combustión interna en la Unión Europea, Alemania ha impulsado una revisión de esta normativa ante la presión de los fabricantes de automóviles. Esta directiva forma parte del Pact Verde Europeo y pretende acelerar el fin de los combustibles fósiles en el transporte.",
       "fecha": "2025-10-24"
     }
-  ]
+  ],
+  "loquesea": []
 }

@@ -2,9 +2,12 @@
   <!--Botón centrado-->
 
   <div
-    class="mx-auto mt-2 p-4 pb-5 border rounded-3 shadow-sm min-vh-75 bg-light"
-  >
-    <h3 class="text-center my-2">Gestión de Clientes</h3>
+    class="mx-auto mt-2 p-4 pb-5 border rounded-3 shadow-sm min-vh-75 bg-light">
+    <h3 class="text-center mt-2 mb-3 d-flex align-items-center justify-content-center" 
+    style="color: #7a0f16;">
+      <i class="bi bi-person-circle fs-3 me-2"></i>
+      Gestión de Clientes
+    </h3>
     <!-- Formulario -->
     <form @submit.prevent="guardarCliente" class="mb-4">
       <!-- DNI con validación visual -->
@@ -22,9 +25,16 @@
               :class="{ 'is-invalid': !dniValido }"
               required
             />
+            <!-- <input
+              type="radio"
+              id="tipoCliente"
+              v-model="nuevoCliente.tipoCliente"
+              class="form-check-input ms-3 rounded-0 border shadow none d-flex alingn-items w-auto"
+              value="particular"
+            /> <label for="tipoCliente" class="ms-1 mb-0">Particular</label> -->
 			      <button
               type="button"
-              class="btn btn-primary"
+              class="btn btn-primary ms-3"
               @click="buscarClientePorDNI(nuevoCliente.dni)">
               
               <i class="bi bi-search"></i>
@@ -35,22 +45,47 @@
           </div>
         </div>
 
-        <!-- Columna Fecha de Alta a la derecha -->
-        <div class="col-md-4 d-flex align-items-center justify-content-end">
-          <label for="fecha_alta" class="form-label me-2 mb-0 text-nowrap"
-            >Fecha de Alta:</label
-          >
-          <input
-            type="date"
-            id="fecha_alta"
-            v-model="nuevoCliente.fecha_alta"
-            class="form-control w-auto me-5"
-          />
+        <div class="col-md-3 d-flex align-items-center">
+        <label>Tipo de Cliente:</label>
+        <div class="ms-3">
+          <label for="radio-empresa">Empresa:</label>
+          <input type="radio" id="radio-empresa" name="radio" class="ms-2" />
+        </div>
+
+        <div class="ms-3">
+          <label for="radio-particular">Particular:</label>
+          <input type="radio" id="radio-particular" name="radio" class="ms-2" />
         </div>
       </div>
 
+        <!-- Columna Fecha de Alta a la derecha -->
+        <div class="col-md-4 d-flex align-items-center justify-content-end ms-5">
+        <label for="fecha_alta" class="form-label me-2 mb-0 text-nowrap">
+          Fecha de Alta:
+        </label>
+
+        <input
+          type="date"
+          id="fecha_alta"
+          v-model="nuevoCliente.fecha_alta"
+          @change="onFechaChange"
+          class="form-control w-auto me-5"
+        />
+
+        <!-- botón limpiar cambios -->
+        <button
+          type="button"
+          class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center  "
+          @click="limpiarCampos"
+          title="Reiniciar campos"
+        >
+          <i class="bi bi-arrow-clockwise fs-5"></i>
+        </button>
+      </div>
+      </div>
+
       <!-- Nombre y Apellidos -->
-      <div class="mb-3 row g-3 align-items-center">
+      <div class="mb-3 row g-3 align-items-center ">
         <!-- Nombre -->
         <div class="col-md-5 d-flex align-items-center">
           <label for="nombre" class="form-label mb-0 text-nowrap w-25"
@@ -67,8 +102,8 @@
         </div>
 
         <!-- Apellidos -->
-        <div class="col-md-6 d-flex align-items-center">
-          <label for="apellidos" class="form-label me-5 mb-0 text-nowrap"
+        <div class="col-md-5 d-flex align-items-center">
+          <label for="apellidos" class="form-label tamano-label mb-0 ms-5 text-nowrap"
             >Apellidos:</label
           >
           <input
@@ -101,8 +136,8 @@
         </div>
 
         <!-- Móvil -->
-        <div class="col-md-3 d-flex align-items-center">
-          <label for="movil" class="form-label me-4 ms-5 mb-0 text-nowrap"
+        <div class="col-md-3 d-flex align-items-center ">
+          <label for="movil" class="form-label tamano-label ms-5 mb-0 text-nowrap"
             >Móvil:</label
           >
           <input
@@ -133,7 +168,7 @@
 
         <!-- Provincia -->
         <div class="col-md-3 d-flex align-items-center">
-          <label for="provincia" class="form-label me-2 ms-5 mb-0 text-nowrap"
+          <label for="provincia" class="form-label tamano-label ms-5 mb-0 text-nowrap"
             >Provincia:</label
           >
           <select
@@ -190,11 +225,22 @@
     </div>
 
       <!-- Botón centrado y checkbox al final -->
-      <div class="d-flex align-items-center mt-3">
+      <div class="d-flex justify-content-between mt-3">
+        <div class="form-check form-switch ms-3 invisible">
+          <input
+            type="checkbox"
+            id="historico"
+            v-model="mostrarHistorico"
+            class="form-check-input"
+            @change="cargarClientes"
+          />
+          <label for="historico" class="form-check-label ms-2">Histórico</label>
+        </div>
+
         <!-- Espacio izquierdo para centrar el botón -->
         <div class="flex-grow-1 d-flex justify-content-center">
           <button type="submit" class="btn btn-primary px-4">
-            {{ editando ? "Modificar Cliente" : "Guardar Cliente" }}
+            {{ editando ? "Modificar" : "Guardar" }}
           </button>
         </div>
 
@@ -213,7 +259,7 @@
     </form>
     <!-- Lista de Clientes -->
     <div class="table-responsive">
-      <h4 class="text-center w-100">Listado Clientes</h4>
+      <h4 class="text-center w-100 ">Listado Clientes</h4>
       <table class="table table-bordered table-striped w-100 aling-middle">
         <thead class="table-primary">
           <tr>
@@ -227,12 +273,12 @@
         </thead>
         <tbody>
           <tr v-for="(cliente, index) in clientesPaginados" :key="cliente.id || index">
-            <th scope="row" class="text-center">{{ (currentPage - 1 ) * clientesPorPage + index +1 }}</th>
-            <td>{{ cliente.apellidos }}</td>
-            <td>{{ cliente.nombre }}</td>
-            <td class="text-center">{{ cliente.movil }}</td>
-            <td class="text-center">{{ cliente.municipio }}</td>
-            <td class="align-middle text-center">
+            <th scope="row" class="text-center py-1">{{ (currentPage - 1 ) * clientesPorPage + index +1 }}</th>
+            <td class="py-1">{{ cliente.apellidos }}</td>
+            <td class="py-1">{{ cliente.nombre }}</td>
+            <td class="text-center py-1">{{ cliente.movil }}</td>
+            <td class="text-center py-1">{{ cliente.municipio }}</td>
+            <td class="align-middle text-center py-1">
               <button
                 @click="eliminarCliente(cliente.movil)"
                 class="btn btn-danger btn-sm me-2"
@@ -301,8 +347,45 @@ const nuevoCliente = ref({
   municipio: "",
   fecha_alta: "",
   historico: true,
-  lopd: false // aceptación del aviso legal (L.O.P.D.)
+  lopd: false, // aceptación del aviso legal (L.O.P.D.)
+  tipoCliente: ""
 });
+
+// Campo auxiliar que mantiene el valor para el <input type="date"> (yyyy-mm-dd)
+const fechaInput = ref("");
+
+// Convierte valor de input (yyyy-mm-dd o yyyy-mm-ddTHH:MM) a formato de almacenamiento dd/mm/yyyy
+function inputToStorageDate(val) {
+  if (!val) return "";
+  const datePart = val.split("T")[0];
+  const [y, m, d] = datePart.split("-");
+  if (!y || !m || !d) return "";
+  return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
+}
+
+// Convierte de varios formatos a yyyy-mm-dd para usar en el input type=date
+function toInputDateValue(fecha) {
+  if (!fecha) return "";
+  // si viene dd/mm/yyyy
+  if (fecha.includes("/")) {
+    const [d, m, y] = fecha.split("/");
+    return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+  }
+  // si viene con T (datetime-local)
+  if (fecha.includes("T")) return fecha.split("T")[0];
+  // si viene yyyy-mm-dd o yyyy-mm-dd HH:MM
+  if (fecha.includes("-")) return fecha.split(" ")[0];
+  return "";
+}
+
+// Handler llamado al cambiar el input de fecha: actualiza el campo de almacenamiento en dd/mm/yyyy
+function onFechaChange() {
+  if (!fechaInput.value) {
+    nuevoCliente.value.fecha_alta = "";
+    return;
+  }
+  nuevoCliente.value.fecha_alta = inputToStorageDate(fechaInput.value);
+}
 
 const editando = ref(false);
 const clienteEditandoId = ref(null);
@@ -379,9 +462,10 @@ const guardarCliente = async () => {
     return;
   }
 
-  nuevoCliente.value.fecha_alta = formatearFechaParaInput(
-    nuevoCliente.fecha_alta
-  );
+  // Asegurar que antes de guardar la fecha de alta esté en formato dd/mm/yyyy
+  nuevoCliente.value.fecha_alta = fechaInput.value
+    ? inputToStorageDate(fechaInput.value)
+    : nuevoCliente.value.fecha_alta;
   // Validar duplicados solo si estás creando (no si editando)
   if (!editando.value) {
     const duplicado = clientes.value.find(
@@ -495,6 +579,7 @@ const agregarCliente = () => {
     fecha_alta: "",
     historico: false,
   };
+  fechaInput.value = "";
 };
 
 // Funcion Eliminar Cliente con patch (histórico a false)
@@ -556,8 +641,11 @@ const editarCliente = (movil) => {
   // Copiar datos al formulario
   nuevoCliente.value = { ...cliente }; // 🔁 Aquí cargas el formulario con los datos
   editando.value = true;
-  // Formatear fecha para el input type="date"
-  nuevoCliente.value.fecha_alta = formatearFechaParaInput(cliente.fecha_alta);
+  // Formatear fecha para el input type="date" y para almacenamiento
+  nuevoCliente.value.fecha_alta = cliente.fecha_alta ? cliente.fecha_alta : "";
+  fechaInput.value = toInputDateValue(cliente.fecha_alta);
+  console.log('fechaInput:', fechaInput.value, 'fecha_alta almacenada:', nuevoCliente.value.fecha_alta);
+  
   // Actualiza municipios filtrados según la provincia seleccionada
   filtrarMunicipios();
   nuevoCliente.value.municipio = cliente.municipio; // 🟢 Ahora estamos en modo edición
@@ -733,16 +821,31 @@ const capitalizarTexto = (campo) => {
 function formatearFechaParaInput(fecha) {
   if (!fecha) return "";
 
-  // Detecta formato dd/mm/yyyy
+  // Manejar formato con barras dd/mm/yyyy o dd/mm/yyyy hh:mm
   if (fecha.includes("/")) {
-    const [dd, mm, yyyy] = fecha.split("/");
-    return `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}`;
+    // Puede venir como "dd/mm/yyyy" o "dd/mm/yyyy HH:MM"
+    const [datePart, timePart] = fecha.split(" ");
+    const [dd, mm, yyyy] = datePart.split("/");
+    const time = timePart ? timePart : "00:00";
+    return `${yyyy}-${mm.padStart(2, "0")}-${dd.padStart(2, "0")}T${time}`;
   }
 
-  // Detecta formato yyyy-mm-dd
+  // Si ya viene con guiones
   if (fecha.includes("-")) {
+    // Si ya tiene la T (formato datetime-local esperado)
+    if (fecha.includes("T")) {
+      // Asegurar formato YYYY-MM-DDTHH:MM (recortar si tiene segundos o zona)
+      return fecha.length >= 16 ? fecha.slice(0, 16) : `${fecha}T00:00`;
+    }
+
+    // Si viene como "yyyy-mm-dd HH:MM"
+    if (fecha.includes(" ")) {
+      return fecha.replace(" ", "T").slice(0, 16);
+    }
+
+    // yyyy-mm-dd (solo fecha) -> añadir hora 00:00
     const partes = fecha.split("-");
-    if (partes.length === 3) return fecha; // ya formato ISO
+    if (partes.length === 3) return `${fecha}T00:00`;
   }
 
   return "";
@@ -773,9 +876,11 @@ const buscarClientePorDNI = async (dni) => {
       return;
     }
 
-    // ✅ Cargar los datos en el formulario
-    nuevoCliente.value = { ...cliente };
-    nuevoCliente.value.fecha_alta = formatearFechaParaInput(cliente.fecha_alta);
+  // ✅ Cargar los datos en el formulario
+  nuevoCliente.value = { ...cliente };
+  // Mantener la fecha en almacenamiento (dd/mm/yyyy) y preparar el input (yyyy-mm-dd)
+  nuevoCliente.value.fecha_alta = cliente.fecha_alta ? cliente.fecha_alta : "";
+  fechaInput.value = toInputDateValue(cliente.fecha_alta);
 
     // Actualiza lista de municipios si cambia la provincia
     filtrarMunicipios();
@@ -800,6 +905,25 @@ const buscarClientePorDNI = async (dni) => {
     });
   }
 };
+
+// 🔹 Esta función se ejecutará al hacer clic en el icono azul:
+const limpiarCampos = () => {
+  nuevoCliente.value = {
+    dni: "",
+    nombre: "",
+    apellidos: "",
+    email: "",
+    movil: "",
+    direccion: "",
+    provincia: "",
+    municipio: "",
+    fecha_alta: "",
+    historico: true,
+    lopd: false,
+    tipoCliente: ""
+  }
+}
+
 </script>
 
 <style scoped>
@@ -810,5 +934,10 @@ const buscarClientePorDNI = async (dni) => {
 
 .invalid-feedback {
   display: block;
+}
+
+.tamano-label{
+  width: 90px;
+  min-width: 90px;
 }
 </style>
