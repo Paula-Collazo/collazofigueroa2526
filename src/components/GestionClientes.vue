@@ -45,7 +45,7 @@
           </div>
         </div>
 
-        <div class="col-md-3 d-flex align-items-center">
+        <div class="col-md-3 d-flex align-items-center justify-content-center">
         <label>Tipo de Cliente:</label>
         <div class="ms-3">
           <label for="radio-empresa">Empresa:</label>
@@ -59,7 +59,7 @@
       </div>
 
         <!-- Columna Fecha de Alta a la derecha -->
-        <div class="col-md-4 d-flex align-items-center justify-content-end ms-5">
+        <div class="col-md-4 d-flex align-items-center justify-content-end ms-4">
         <label for="fecha_alta" class="form-label me-2 mb-0 text-nowrap">
           Fecha de Alta:
         </label>
