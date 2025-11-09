@@ -237,6 +237,7 @@
           <label for="historico" class="form-check-label ms-2">Histórico</label>
         </div>
 
+        <!-- TODO hacer disabled en el boton -->
         <!-- Espacio izquierdo para centrar el botón -->
         <div class="flex-grow-1 d-flex justify-content-center">
           <button type="submit" class="btn btn-primary px-4">
@@ -544,6 +545,7 @@ const guardarCliente = async () => {
     // };
     editando.value = false;
     clienteEditandoId.value = null;
+    limpiarCampos()
 
     // Reset validaciones si tienes (dniValido, movilValido, etc)
     dniValido.value = true;
@@ -638,6 +640,7 @@ const editarCliente = (movil) => {
     return;
   }
 
+  //TODO que al editar cliente no se borre la fecha
   // Copiar datos al formulario
   nuevoCliente.value = { ...cliente }; // 🔁 Aquí cargas el formulario con los datos
   editando.value = true;
@@ -906,6 +909,7 @@ const buscarClientePorDNI = async (dni) => {
   }
 };
 
+//TODO que se limpie el checkbox
 // 🔹 Esta función se ejecutará al hacer clic en el icono azul:
 const limpiarCampos = () => {
   nuevoCliente.value = {

@@ -91,6 +91,8 @@
 <script setup>
 import { ref } from "vue"
 import db from "@/data/db.json"
+import Swal from "sweetalert2";
+import axios from "axios";
 
 // Lista de noticias (cargadas desde el JSON)
 const noticias = ref(db.noticias)
@@ -107,32 +109,64 @@ function toggleExpand(id) {
 }
 
 // Función para grabar una nueva noticia
-function grabarNoticia() {
+async function grabarNoticia() {
   if (!nuevoTitulo.value.trim() || !nuevoContenido.value.trim()) {
     alert("Por favor, completa el título y el contenido antes de grabar.")
     return
   }
 
   const nuevaNoticia = {
-    id: noticias.value.length + 1,
+    id: String(
+      noticias.value.length > 0
+        ? Math.max(...noticias.value.map((n) => n.id)) + 1
+        : 1),
     titulo: nuevoTitulo.value,
     contenido: nuevoContenido.value,
     fecha: new Date().toLocaleDateString("es-ES")
   }
 
-  noticias.value.push(nuevaNoticia)
+  try{
+     await axios.post("http://localhost:3000/noticias", nuevaNoticia).then(res => res.data);
+    noticias.value.push(nuevaNoticia)
 
+  }catch(error){
+    console.error("Fallo al guardar en la base de datos", error)
+  }
+ 
   nuevoTitulo.value = ""
   nuevoContenido.value = ""
 
-  alert("✅ Noticia grabada correctamente")
+  Swal.fire({
+        icon: 'success',
+        title: "Noticia grabada exitosamente",
+        showConfirmButton: false,
+        timer: 1500
+        });
 }
 
-function eliminarNoticia(id) {
-  noticias.value = noticias.value.filter((n) => n.id !== id);
-  localStorage.setItem("noticias", JSON.stringify(noticias.value));
-  if (id in isExpanded.value) delete isExpanded.value[id];
+async function eliminarNoticia(id) {
+  const result = await Swal.fire({
+    title: "¿Desea eliminar la noticia?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Eliminar",
+    cancelButtonText: "Cancelar",
+  });
+
+
+
+  try{
+    await axios.delete(`http://localhost:3000/noticias/${id}`)
+    noticias.value = noticias.value.filter((n) => n.id !== id);
+    if(id in isExpanded.value) delete isExpanded.value[id];
+  }catch(error){
+    console.error("Fallo al eliminar de la base de datos", error);
+  }
+ 
 }
+
+
 </script>
 
 <style scoped></style>
+
