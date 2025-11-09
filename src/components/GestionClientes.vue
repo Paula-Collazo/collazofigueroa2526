@@ -22,20 +22,19 @@
               v-model="nuevoCliente.dni"
               @blur="validarDni"
               class="form-control w-auto"
-              :class="{ 'is-invalid': !dniValido }"
+                :class="[
+                { 'is-invalid': !dniValido },
+                { 'readonly-input': editando },
+              ]"
+              :readonly="editando"
               required
             />
-            <!-- <input
-              type="radio"
-              id="tipoCliente"
-              v-model="nuevoCliente.tipoCliente"
-              class="form-check-input ms-3 rounded-0 border shadow none d-flex alingn-items w-auto"
-              value="particular"
-            /> <label for="tipoCliente" class="ms-1 mb-0">Particular</label> -->
 			      <button
               type="button"
               class="btn btn-primary ms-3"
-              @click="buscarClientePorDNI(nuevoCliente.dni)">
+              @click="buscarClientePorDNI(nuevoCliente.dni)"
+              :disabled="editando"
+              :aria-disabled="String(editando)">
               
               <i class="bi bi-search"></i>
             </button>
@@ -49,12 +48,12 @@
         <label>Tipo de Cliente:</label>
         <div class="ms-3">
           <label for="radio-empresa">Empresa:</label>
-          <input type="radio" id="radio-empresa" name="radio" class="ms-2" />
+          <input type="radio" id="radio-empresa" value="empresa" name="radio" class="ms-2" v-model="nuevoCliente.tipoCliente" required/>
         </div>
 
         <div class="ms-3">
           <label for="radio-particular">Particular:</label>
-          <input type="radio" id="radio-particular" name="radio" class="ms-2" />
+          <input type="radio" id="radio-particular" value="particular" name="radio" class="ms-2" v-model="nuevoCliente.tipoCliente" required/>
         </div>
       </div>
 
@@ -70,6 +69,7 @@
           v-model="nuevoCliente.fecha_alta"
           @change="onFechaChange"
           class="form-control w-auto me-5"
+          required
         />
 
         <!-- botón limpiar cambios -->
@@ -415,17 +415,31 @@ const cargarClientes = () => {
         });
     }
 const guardarCliente = async () => {
+  
+    validarDni();
+    validarEmail();
+    validarMovil();
 
-  // Antes de guardar, el usuario debe haber aceptado el Aviso Legal
-  if (!nuevoCliente.value.lopd) {
-    Swal.fire({
-      icon: 'warning',
-      title: 'Debes aceptar el Aviso Legal antes de guardar',
-      showConfirmButton: false,
-      timer: 2000
-    });
-    return;
-  }
+    if (!dniValido.value || !emailValido.value || !movilValido.value) {
+      Swal.fire({
+        icon: "error",
+        title: "Hay campos inválidos",
+        text: "Corrija DNI, móvil o email antes de guardar",
+        showConfirmButton: true,
+      });
+      return; // Salir de la función si hay errores
+    }
+
+    // Antes de guardar, el usuario debe haber aceptado el Aviso Legal
+    if (!nuevoCliente.value.lopd) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Debes aceptar el Aviso Legal antes de guardar',
+        showConfirmButton: false,
+        timer: 2000
+      });
+      return;
+    }
 
   // Asegurar que antes de guardar la fecha de alta esté en formato dd/mm/yyyy
   if (nuevoCliente.value.fecha_alta.includes("/")){
@@ -887,5 +901,12 @@ const limpiarCampos = () => {
 .tamano-label{
   width: 90px;
   min-width: 90px;
+}
+
+/* Visual for readonly/locked inputs when editing a cliente */
+.readonly-input {
+  background-color: #eef2f6 !important; /* soft gray */
+  cursor: not-allowed;
+  color: #495057; /* slightly muted text color */
 }
 </style>

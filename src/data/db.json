@@ -405,10 +405,25 @@
       "movil": "654213658",
       "direccion": "Calle Luna, 34",
       "provincia": "León",
-      "municipio": "",
+      "municipio": "Alija del Infantado",
       "fecha_alta": "2025-11-09",
       "historico": true,
       "lopd": true
+    },
+    {
+      "id": "c457",
+      "dni": "39491578A",
+      "nombre": "Aman ",
+      "apellidos": "Lama Vilariño",
+      "email": "amaa@gmail.com",
+      "movil": "632589417",
+      "direccion": "Chapela 12",
+      "provincia": "Badajoz",
+      "municipio": "Ahillones",
+      "fecha_alta": "2025-11-05",
+      "historico": true,
+      "lopd": true,
+      "tipoCliente": "particular"
     }
   ],
   "noticias": [
