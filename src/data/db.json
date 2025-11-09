@@ -62,14 +62,14 @@
     },
     {
       "dni": "90123456A",
-      "fecha_alta": "2022-06-27",
+      "fecha_alta": "27/06/2022",
       "nombre": "María",
       "apellidos": "Fernández Martín",
       "email": "maria.fernandez@example.com",
       "movil": "623456789",
       "direccion": "Calle Gómez 14",
-      "provincia": "Málaga",
-      "municipio": "Ronda",
+      "provincia": "Cáceres",
+      "municipio": "Abadía",
       "historico": true,
       "lopd": true,
       "password": "",
@@ -122,12 +122,12 @@
     },
     {
       "dni": "23456789D",
-      "fecha_alta": "2022-05-22",
+      "fecha_alta": "2022-05-22T00:00",
       "nombre": "Isabel",
       "apellidos": "Gómez López",
       "email": "isabel.gomez@example.com",
       "movil": "690123456",
-      "direccion": "Calle Sánchez 80",
+      "direccion": "Calle Sánchez 82",
       "provincia": "Cádiz",
       "municipio": "Chiclana de la Frontera",
       "historico": true,
@@ -197,14 +197,14 @@
     },
     {
       "dni": "Y1234567X",
-      "fecha_alta": "2025-09-07",
+      "fecha_alta": "07/09/2025",
       "nombre": "María Del Mar",
       "apellidos": "Gómez Rodríguez",
       "email": "maria.gomez@example.com",
       "movil": "645678901",
       "direccion": "Calle García 21",
       "provincia": "Valencia",
-      "municipio": "Gandía",
+      "municipio": "Ademuz",
       "historico": true,
       "lopd": true,
       "password": "",
@@ -352,8 +352,10 @@
       "direccion": "Avenida Del Puerto, 1",
       "provincia": "Guadalajara",
       "municipio": "Driebes",
-      "fecha_alta": "2025-10-03",
-      "historico": true
+      "fecha_alta": "2025-10-03T00:00",
+      "historico": true,
+      "lopd": true,
+      "email": "paula@gmail.com"
     },
     {
       "id": "ec7e",
@@ -403,9 +405,10 @@
       "movil": "654213658",
       "direccion": "Calle Luna, 34",
       "provincia": "León",
-      "municipio": "Acebedo",
-      "fecha_alta": "08/10/2025",
-      "historico": true
+      "municipio": "",
+      "fecha_alta": "2025-11-09",
+      "historico": true,
+      "lopd": true
     }
   ],
   "noticias": [

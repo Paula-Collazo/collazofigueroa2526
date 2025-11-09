@@ -213,7 +213,7 @@
         <input
           type="checkbox"
           id="avisoLegal"
-          v-model="avisoLegal"
+          v-model="nuevoCliente.lopd"
           class="form-check-input me-2"
           required
         />
@@ -237,10 +237,10 @@
           <label for="historico" class="form-check-label ms-2">Histórico</label>
         </div>
 
-        <!-- TODO hacer disabled en el boton -->
+        
         <!-- Espacio izquierdo para centrar el botón -->
         <div class="flex-grow-1 d-flex justify-content-center">
-          <button type="submit" class="btn btn-primary px-4">
+          <button type="submit" class="btn btn-primary px-4" :disabled="!nuevoCliente.lopd">
             {{ editando ? "Modificar" : "Guardar" }}
           </button>
         </div>
@@ -332,7 +332,6 @@ import {
   getClientePorDni
 } from "@/api/clientes.js";
 import Swal from "sweetalert2";
-import AvisoLegal from './AvisoLegal.vue';
 //import { ref } from 'vue';
 
 //SCRIPT CRUD
@@ -352,41 +351,7 @@ const nuevoCliente = ref({
   tipoCliente: ""
 });
 
-// Campo auxiliar que mantiene el valor para el <input type="date"> (yyyy-mm-dd)
-const fechaInput = ref("");
 
-// Convierte valor de input (yyyy-mm-dd o yyyy-mm-ddTHH:MM) a formato de almacenamiento dd/mm/yyyy
-function inputToStorageDate(val) {
-  if (!val) return "";
-  const datePart = val.split("T")[0];
-  const [y, m, d] = datePart.split("-");
-  if (!y || !m || !d) return "";
-  return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
-}
-
-// Convierte de varios formatos a yyyy-mm-dd para usar en el input type=date
-function toInputDateValue(fecha) {
-  if (!fecha) return "";
-  // si viene dd/mm/yyyy
-  if (fecha.includes("/")) {
-    const [d, m, y] = fecha.split("/");
-    return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
-  }
-  // si viene con T (datetime-local)
-  if (fecha.includes("T")) return fecha.split("T")[0];
-  // si viene yyyy-mm-dd o yyyy-mm-dd HH:MM
-  if (fecha.includes("-")) return fecha.split(" ")[0];
-  return "";
-}
-
-// Handler llamado al cambiar el input de fecha: actualiza el campo de almacenamiento en dd/mm/yyyy
-function onFechaChange() {
-  if (!fechaInput.value) {
-    nuevoCliente.value.fecha_alta = "";
-    return;
-  }
-  nuevoCliente.value.fecha_alta = inputToStorageDate(fechaInput.value);
-}
 
 const editando = ref(false);
 const clienteEditandoId = ref(null);
@@ -394,7 +359,6 @@ const mostrarHistorico = ref(false);
 const clientes = ref([]);
 const numClientes = ref(0);
 const currentPage = ref(1);
-const avisoLegal = ref(false);
 const clientesPorPage = 10;
 
 
@@ -453,7 +417,7 @@ const cargarClientes = () => {
 const guardarCliente = async () => {
 
   // Antes de guardar, el usuario debe haber aceptado el Aviso Legal
-  if (!avisoLegal.value) {
+  if (!nuevoCliente.value.lopd) {
     Swal.fire({
       icon: 'warning',
       title: 'Debes aceptar el Aviso Legal antes de guardar',
@@ -464,9 +428,11 @@ const guardarCliente = async () => {
   }
 
   // Asegurar que antes de guardar la fecha de alta esté en formato dd/mm/yyyy
-  nuevoCliente.value.fecha_alta = fechaInput.value
-    ? inputToStorageDate(fechaInput.value)
+  if (nuevoCliente.value.fecha_alta.includes("/")){
+    nuevoCliente.value.fecha_alta = nuevoCliente.value.fecha_alta
+    ? formatearFechaParaInput(nuevoCliente.value.fecha_alta)
     : nuevoCliente.value.fecha_alta;
+  }
   // Validar duplicados solo si estás creando (no si editando)
   if (!editando.value) {
     const duplicado = clientes.value.find(
@@ -518,7 +484,6 @@ const guardarCliente = async () => {
         timer: 1500,
       });
     } else {
-      nuevoCliente.value.lopd = avisoLegal.value; // Guardar aceptación del aviso legal
       // Agregar cliente (POST)
       const clienteAgregado = await addCliente(nuevoCliente.value);
       clientes.value.push(clienteAgregado);
@@ -566,23 +531,7 @@ const guardarCliente = async () => {
   }
 };
 
-const agregarCliente = () => {
-  clientes.value.push({ ...nuevoCliente.value });
-  // Reiniciar el formulario
-  nuevoCliente.value = {
-    dni: "",
-    nombre: "",
-    apellidos: "",
-    email: "",
-    movil: "",
-    direccion: "",
-    provincia: "",
-    municipio: "",
-    fecha_alta: "",
-    historico: false,
-  };
-  fechaInput.value = "";
-};
+
 
 // Funcion Eliminar Cliente con patch (histórico a false)
 const eliminarCliente = async (movil) => {
@@ -628,6 +577,7 @@ const eliminarCliente = async (movil) => {
   });
 };
 
+// Función Editar Cliente (carga datos en el formulario)
 const editarCliente = (movil) => {
   const cliente = clientes.value.find((c) => c.movil === movil);
   if (!cliente) {
@@ -639,19 +589,14 @@ const editarCliente = (movil) => {
     });
     return;
   }
-
-  //TODO que al editar cliente no se borre la fecha
-  // Copiar datos al formulario
-  nuevoCliente.value = { ...cliente }; // 🔁 Aquí cargas el formulario con los datos
+  // Detectar si fecha ya está en ISO o no, y convertir solo si es necesario
+  let fechaFormateada = cliente.fecha_alta;
+  if (fechaFormateada && fechaFormateada.includes("/")) {
+    fechaFormateada = formatearFechaParaInput(fechaFormateada);
+  }
+  nuevoCliente.value = { ...cliente, fecha_alta: fechaFormateada };
   editando.value = true;
-  // Formatear fecha para el input type="date" y para almacenamiento
-  nuevoCliente.value.fecha_alta = cliente.fecha_alta ? cliente.fecha_alta : "";
-  fechaInput.value = toInputDateValue(cliente.fecha_alta);
-  console.log('fechaInput:', fechaInput.value, 'fecha_alta almacenada:', nuevoCliente.value.fecha_alta);
-  
-  // Actualiza municipios filtrados según la provincia seleccionada
   filtrarMunicipios();
-  nuevoCliente.value.municipio = cliente.municipio; // 🟢 Ahora estamos en modo edición
   clienteEditandoId.value = cliente.id;
 };
 
@@ -882,8 +827,7 @@ const buscarClientePorDNI = async (dni) => {
   // ✅ Cargar los datos en el formulario
   nuevoCliente.value = { ...cliente };
   // Mantener la fecha en almacenamiento (dd/mm/yyyy) y preparar el input (yyyy-mm-dd)
-  nuevoCliente.value.fecha_alta = cliente.fecha_alta ? cliente.fecha_alta : "";
-  fechaInput.value = toInputDateValue(cliente.fecha_alta);
+  nuevoCliente.value.fecha_alta = formatearFechaParaInput(cliente.fecha_alta);
 
     // Actualiza lista de municipios si cambia la provincia
     filtrarMunicipios();
@@ -909,7 +853,7 @@ const buscarClientePorDNI = async (dni) => {
   }
 };
 
-//TODO que se limpie el checkbox
+
 // 🔹 Esta función se ejecutará al hacer clic en el icono azul:
 const limpiarCampos = () => {
   nuevoCliente.value = {
