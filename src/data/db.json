@@ -390,7 +390,7 @@
       "movil": "652145785",
       "direccion": "Calle Sol, 25",
       "provincia": "Huelva",
-      "municipio": "",
+      "municipio": "Aljaraque",
       "fecha_alta": "2025-10-08",
       "historico": true,
       "lopd": true,
@@ -446,5 +446,61 @@
       "fecha": "2025-10-24"
     }
   ],
-  "loquesea": []
+  "modelos": [
+    {
+      "id": "1",
+      "nombre": "Toyota Prius",
+      "matricula": "2770HMP",
+      "tipo": "Deportivo",
+      "dueno": "Paula Collazo",
+      "combustible": "Diesel",
+      "marca": "Nissan",
+      "roto": false,
+      "itv": true
+    },
+    {
+      "id": "2",
+      "nombre": "Seat Ibiza",
+      "matricula": "7462KGZ",
+      "tipo": "Carretera",
+      "dueno": "Bacon Porki",
+      "combustible": "Diesel",
+      "marca": "Seat",
+      "roto": true,
+      "itv": false
+    },
+    {
+      "id": "3",
+      "nombre": "Citroën Saxo",
+      "matricula": "1234AAA",
+      "tipo": "Carretera",
+      "dueno": "Ainhoa Marcos",
+      "combustible": "Gasolina",
+      "marca": "Citroën",
+      "roto": true,
+      "itv": false
+    },
+    {
+      "id": "4",
+      "nombre": "Dasfs",
+      "matricula": "5879LKP",
+      "tipo": "Deportivo",
+      "dueno": "Dsfn",
+      "marca": "Nissan",
+      "combustible": "Gasolina",
+      "roto": false,
+      "itv": false
+    },
+    {
+      "id": "6",
+      "nombre": "Dfsaf",
+      "matricula": "7546KKK",
+      "tipo": "Turismo",
+      "dueno": "Jdmlks",
+      "marca": "Nissan",
+      "combustible": "Gasolina",
+      "roto": false,
+      "itv": true
+    }
+  ]
 }

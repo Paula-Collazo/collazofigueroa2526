@@ -27,7 +27,7 @@
           <tr>
             <td>
               <div class="d-flex justify-content-between align-items-center">
-                <strong class="text-primary">{{ noticia.titulo }}</strong>
+                <strong class="text" style="color: #7a0f16;">{{ noticia.titulo }}</strong>
                 <small class="text-muted">{{ noticia.fecha }}</small>
               </div>
             </td>

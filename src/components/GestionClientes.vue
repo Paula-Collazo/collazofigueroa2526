@@ -31,7 +31,7 @@
             />
 			      <button
               type="button"
-              class="btn btn-primary ms-3"
+              class="btn btn-secondary ms-3"
               @click="buscarClientePorDNI(nuevoCliente.dni)"
               :disabled="editando"
               :aria-disabled="String(editando)">
@@ -75,7 +75,7 @@
         <!-- botón limpiar cambios -->
         <button
           type="button"
-          class="btn btn-outline-primary btn-sm d-flex align-items-center justify-content-center  "
+          class="btn btn-secondary btn-sm d-flex align-items-center justify-content-center  "
           @click="limpiarCampos"
           title="Reiniciar campos"
         >
@@ -262,7 +262,7 @@
     <div class="table-responsive">
       <h4 class="text-center w-100 ">Listado Clientes</h4>
       <table class="table table-bordered table-striped w-100 aling-middle">
-        <thead class="table-primary" style="background-color: #e57373;">
+        <thead class="table-primary">
           <tr>
             <th class="text-center">ID</th>
             <th class="text-center">Apellidos</th>
@@ -611,6 +611,7 @@ const editarCliente = (movil) => {
   nuevoCliente.value = { ...cliente, fecha_alta: fechaFormateada };
   editando.value = true;
   filtrarMunicipios();
+  nuevoCliente.value.municipio = cliente.municipio;
   clienteEditandoId.value = cliente.id;
 };
 
@@ -903,10 +904,19 @@ const limpiarCampos = () => {
   min-width: 90px;
 }
 
+.table-primary th {
+  background-color:   #f59191 !important;
+  color: black !important;
+}
+
 /* Visual for readonly/locked inputs when editing a cliente */
 .readonly-input {
   background-color: #eef2f6 !important; /* soft gray */
   cursor: not-allowed;
   color: #495057; /* slightly muted text color */
 }
+
+
+
+
 </style>
