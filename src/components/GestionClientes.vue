@@ -262,7 +262,7 @@
     <div class="table-responsive">
       <h4 class="text-center w-100 ">Listado Clientes</h4>
       <table class="table table-bordered table-striped w-100 aling-middle">
-        <thead class="table-primary">
+        <thead class="table-primary" style="background-color: #e57373;">
           <tr>
             <th class="text-center">ID</th>
             <th class="text-center">Apellidos</th>

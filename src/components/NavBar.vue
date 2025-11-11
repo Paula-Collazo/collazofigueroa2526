@@ -60,6 +60,6 @@ import { RouterLink } from 'vue-router';
 }
 
 .navbar.bg-danger {
-  background-color: #b02a37 !important;
+  background-color:  #b02a37!important; /* #e57373  */
 }
 </style>
