@@ -4,7 +4,8 @@ import GestionClientes from "../components/GestionClientes.vue";
 import NotiCias from "../components/NotiCias.vue";
 import AvisoLegal from "../components/AvisoLegal.vue";
 import PoliticaPrivacidad from "../components/PoliticaPrivacidad.vue";
-import MoDelos from "../components/MoDelos.vue";
+import ModeLos from "../components/ModeLos.vue"; 
+import ConTacto from "../components/ConTacto.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 
@@ -41,9 +42,16 @@ const routes = [
     },
     {
         path: '/modelos',
-        name: 'MoDelos',
-        component: MoDelos
+        name: 'ModeLos',
+        component: ModeLos
+    },
+    {
+        path: '/contacto',
+        name: 'ConTacto',
+        component: ConTacto
+
     }
+    
 
 ]
 const router = createRouter({

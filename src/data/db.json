@@ -439,6 +439,7 @@
       "contenido": "Toyota presenta su nuevo eléctrico bZ4X, un SUV compacto con autonomía de hasta 450 km y tecnología avanzada de asistencia al conductor. Este modelo marca el inicio de la nueva familia bZ (beyond Zero) de Toyota, enfocada en cero emisiones. El bZ4X cuenta con tracción total opcional, carga rápida y un diseño futurista que combina eficiencia y confort. Llegará a concesionarios en 2025, posicionándose como una opción competitiva en el mercado EV global.",
       "fecha": "2025-10-23"
     },
+
     {
       "id": "3",
       "titulo": "La UE dando palos de ciego en el mundo del motor",
@@ -497,6 +498,17 @@
       "matricula": "7546KKK",
       "tipo": "Turismo",
       "dueno": "Jdmlks",
+      "marca": "Nissan",
+      "combustible": "Gasolina",
+      "roto": false,
+      "itv": true
+    },
+    {
+      "id": "6",
+      "nombre": "Amancio",
+      "matricula": "4458MMM",
+      "tipo": "Turismo",
+      "dueno": "Daniel Fuentes",
       "marca": "Nissan",
       "combustible": "Gasolina",
       "roto": false,
