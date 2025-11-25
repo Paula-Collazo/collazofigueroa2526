@@ -5,7 +5,8 @@ import NotiCias from "../components/NotiCias.vue";
 import AvisoLegal from "../components/AvisoLegal.vue";
 import PoliticaPrivacidad from "../components/PoliticaPrivacidad.vue";
 import ModeLos from "../components/ModeLos.vue"; 
-import ConTacto from "../components/ConTacto.vue";
+import CitasTaller from "../components/CitasTaller.vue";
+import TablaLogin from "../components/TablaLogin.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 
@@ -46,10 +47,14 @@ const routes = [
         component: ModeLos
     },
     {
-        path: '/contacto',
-        name: 'ConTacto',
-        component: ConTacto
-
+        path: '/CitasTaller',
+        name: 'CitasTaller',
+        component: CitasTaller
+    },
+    {
+        path: '/login',
+        name: 'login',
+        component: TablaLogin
     }
     
 

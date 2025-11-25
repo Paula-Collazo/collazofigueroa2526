@@ -208,6 +208,38 @@
 
       <!-- Aviso Legal -->
 
+      <!-- Contraseña y repetir contraseña -->
+      <div class="mb-3 row g-3 align-items-center">
+        <div class="col-md-5 d-flex align-items-center">
+          <label for="password" class="form-label mb-0 text-nowrap w-25">Contraseña:</label>
+          <input
+            type="password"
+            id="password"
+            v-model="nuevoCliente.password"
+            class="form-control flex-grow-1"
+            :class="{ 'is-invalid': !passwordValido }"
+            @blur="validarPassword"
+            required
+          />
+          <div v-if="!passwordValido" class="invalid-feedback">
+            La contraseña debe tener al menos 6 caracteres y coincidir.
+          </div>
+        </div>
+
+        <div class="col-md-5 d-flex align-items-center">
+          <label for="password_repeat" class="form-label tamano-label mb-0 ms-5 text-nowrap">Repetir:</label>
+          <input
+            type="password"
+            id="password_repeat"
+            v-model="nuevoCliente.password_repeat"
+            class="form-control flex-grow-1"
+            :class="{ 'is-invalid': !passwordValido }"
+            @blur="validarPassword"
+            required
+          />
+        </div>
+      </div>
+
       <div class="d-flex align-items-center mt-3">
       <div class="flex-grow-1 d-flex justify-content-center">
         <input
@@ -345,11 +377,14 @@ const nuevoCliente = ref({
   direccion: "",
   provincia: "",
   municipio: "",
-  fecha_alta: "",
+    fecha_alta: "",
   historico: true,
   lopd: false, // aceptación del aviso legal (L.O.P.D.)
   tipoCliente: ""
 });
+
+// Validación contraseña
+const passwordValido = ref(true);
 
 
 
@@ -440,6 +475,23 @@ const guardarCliente = async () => {
       });
       return;
     }
+
+  // Validar contraseña: mínimo 6 caracteres y que coincidan
+  if (!editando.value) { // solo validar en creación (opcional)
+    const pw = nuevoCliente.value.password || "";
+    const pw2 = nuevoCliente.value.password_repeat || "";
+    if (pw.length < 6 || pw !== pw2) {
+      passwordValido.value = false;
+      Swal.fire({
+        icon: "error",
+        title: "Contraseñas inválidas",
+        text: "La contraseña debe tener al menos 6 caracteres y coincidir en ambos campos.",
+      });
+      return;
+    } else {
+      passwordValido.value = true;
+    }
+  }
 
   // Asegurar que antes de guardar la fecha de alta esté en formato dd/mm/yyyy
   if (nuevoCliente.value.fecha_alta.includes("/")){
@@ -883,9 +935,18 @@ const limpiarCampos = () => {
     fecha_alta: "",
     historico: true,
     lopd: false,
-    tipoCliente: ""
+    tipoCliente: "",
+    password: "",
+    password_repeat: ""
   }
 }
+
+// Añadimos limpieza de passwords si se usa sin reescribir todo
+const validarPassword = () => {
+  const pw = nuevoCliente.value.password || "";
+  const pw2 = nuevoCliente.value.password_repeat || "";
+  passwordValido.value = pw.length >= 6 && pw === pw2;
+};
 
 </script>
 

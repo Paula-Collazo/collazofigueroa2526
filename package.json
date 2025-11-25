@@ -22,6 +22,7 @@
     "json-server": "^1.0.0-beta.3",
     "mongoose": "^8.19.2",
     "mongose": "^0.0.2-security",
+    "multer": "^2.0.2",
     "nvm": "^0.0.4",
     "router": "^2.2.0",
     "sweetalert2": "^11.23.0",

@@ -439,7 +439,6 @@
       "contenido": "Toyota presenta su nuevo eléctrico bZ4X, un SUV compacto con autonomía de hasta 450 km y tecnología avanzada de asistencia al conductor. Este modelo marca el inicio de la nueva familia bZ (beyond Zero) de Toyota, enfocada en cero emisiones. El bZ4X cuenta con tracción total opcional, carga rápida y un diseño futurista que combina eficiencia y confort. Llegará a concesionarios en 2025, posicionándose como una opción competitiva en el mercado EV global.",
       "fecha": "2025-10-23"
     },
-
     {
       "id": "3",
       "titulo": "La UE dando palos de ciego en el mundo del motor",
@@ -447,72 +446,42 @@
       "fecha": "2025-10-24"
     }
   ],
-  "modelos": [
+  "citas": [
     {
       "id": "1",
-      "nombre": "Toyota Prius",
-      "matricula": "2770HMP",
-      "tipo": "Deportivo",
-      "dueno": "Paula Collazo",
-      "combustible": "Diesel",
-      "marca": "Nissan",
-      "roto": false,
-      "itv": true
+      "matricula": "4458MMM",
+      "movil": "604037382",
+      "fechaCita": "2025-11-18",
+      "servicioTaller": "preITV",
+      "estadoCita": "Pendiente",
+      "acepta": true
     },
     {
       "id": "2",
-      "nombre": "Seat Ibiza",
-      "matricula": "7462KGZ",
-      "tipo": "Carretera",
-      "dueno": "Bacon Porki",
-      "combustible": "Diesel",
-      "marca": "Seat",
-      "roto": true,
-      "itv": false
+      "matricula": "2770HPM",
+      "movil": "654236987",
+      "fechaCita": "2025-11-02",
+      "servicioTaller": "revisión",
+      "estadoCita": "Finalizado",
+      "acepta": true
     },
     {
       "id": "3",
-      "nombre": "Citroën Saxo",
-      "matricula": "1234AAA",
-      "tipo": "Carretera",
-      "dueno": "Ainhoa Marcos",
-      "combustible": "Gasolina",
-      "marca": "Citroën",
-      "roto": true,
-      "itv": false
+      "matricula": "4458MMM",
+      "movil": "604037381",
+      "fechaCita": "2025-11-04",
+      "servicioTaller": "preITV",
+      "estadoCita": "Finalizado",
+      "acepta": true
     },
     {
       "id": "4",
-      "nombre": "Dasfs",
-      "matricula": "5879LKP",
-      "tipo": "Deportivo",
-      "dueno": "Dsfn",
-      "marca": "Nissan",
-      "combustible": "Gasolina",
-      "roto": false,
-      "itv": false
-    },
-    {
-      "id": "6",
-      "nombre": "Dfsaf",
-      "matricula": "7546KKK",
-      "tipo": "Turismo",
-      "dueno": "Jdmlks",
-      "marca": "Nissan",
-      "combustible": "Gasolina",
-      "roto": false,
-      "itv": true
-    },
-    {
-      "id": "6",
-      "nombre": "Amancio",
       "matricula": "4458MMM",
-      "tipo": "Turismo",
-      "dueno": "Daniel Fuentes",
-      "marca": "Nissan",
-      "combustible": "Gasolina",
-      "roto": false,
-      "itv": true
+      "movil": "604037383",
+      "fechaCita": "2025-11-04",
+      "servicioTaller": "revisión",
+      "estadoCita": "Pendiente",
+      "acepta": true
     }
   ]
 }
