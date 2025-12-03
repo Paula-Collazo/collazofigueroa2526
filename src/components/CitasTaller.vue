@@ -96,7 +96,7 @@
         </div>
                 <!-- Botón de acción: Añadir o Modificar -->
                 <div class="flex-grow-1 d-flex justify-content-center">
-                    <button type="submit" class="btn btn-primary mt-3" :disabled="botonDeshabilitado">
+                    <button type="submit" class="btn btn-primary mt-3">
                         {{ editando ? "Modificar" : "Añadir" }}
                     </button>
                 </div>

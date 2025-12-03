@@ -5,19 +5,21 @@
       Noticias
     </h3>
 
+    <div v-if="isAdmin">
     <!-- Formulario -->
-    <div id="titulo-noticias" class="d-flex align-items-center gap-3">
-      <label for="titulo" class="fw-bold mb-0">Título:</label>
-      <input type="text" maxlength="128" id="titulo" class="form-control" v-model="nuevoTitulo" />
-    </div>
+      <div id="titulo-noticias" class="d-flex align-items-center gap-3">
+        <label for="titulo" class="fw-bold mb-0">Título:</label>
+        <input type="text" maxlength="128" id="titulo" class="form-control" v-model="nuevoTitulo" />
+      </div>
 
-    <div id="contenido-noticias" class="d-flex flex-column">
-      <label for="contenido" class="fw-bold mb-2">Contenido:</label>
-      <textarea id="contenido" maxlength="256" class="form-control" rows="5" v-model="nuevoContenido"></textarea>
-    </div>
+      <div id="contenido-noticias" class="d-flex flex-column">
+        <label for="contenido" class="fw-bold mb-2">Contenido:</label>
+        <textarea id="contenido" maxlength="256" class="form-control" rows="5" v-model="nuevoContenido"></textarea>
+      </div>
 
-    <div class="text-center">
-      <button type="button" class="btn btn-primary px-4" @click="grabarNoticia">Publicar</button>
+      <div class="text-center">
+        <button type="button" class="btn btn-primary px-4" @click="grabarNoticia">Publicar</button>
+      </div>
     </div>
 
     <!-- Tabla de noticias -->
@@ -57,6 +59,9 @@
 import { ref, onMounted } from "vue";
 import Swal from "sweetalert2";
 import { getNoticias, addNoticia, deleteNoticia } from "@/api/noticias.js";
+
+const isAdmin = localStorage.getItem('isAdmin') === 'true'
+
 
 const noticias = ref([]);
 const isExpanded = ref({});

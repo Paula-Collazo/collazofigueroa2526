@@ -39,17 +39,21 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/CitasTaller">Citas Taller</router-link>
           </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/ventas">Ventas</router-link>
+          </li>
         </ul>
         <!-- Dropdown de acceso/registro -->
         <div class="dropdown ms-auto">
           <button
-            class="btn btn-primary dropdown-toggle"
-            style="background-color: #b02a37; border-color: white;"
-            type="button"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
+          class="btn btn-primary dropdown-toggle d-flex align-items-center gap-2"
+          style="background-color: #b02a37; border-color: white;"
+          type="button"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
           >
-            <i class="bi bi-person fs-4" style="background-color: #b02a37;"></i>
+          <p class=" mb-0 ">{{userName}}</p>
+          <i class="bi bi-person fs-4" style="background-color: #b02a37;"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
             <!-- Mostra “Acceso/Registro” se NON hai usuario logueado -->
