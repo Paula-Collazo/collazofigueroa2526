@@ -35,6 +35,9 @@
 
 import Swal from 'sweetalert2';
 import { loginUsuario } from "@/api/authApi.js";
+import * as jwtDecode from 'jwt-decode';  // Importación de la librería jwt-decode de forma antigua
+// de importación por eso el "* as" no funciona con "import jwtDecode from 'jwt-decode';"
+// npm install jwt-decode  o  npm install jwt-decode@3.1.2
 
 export default {
   name: "TablaLogin",
@@ -45,35 +48,48 @@ export default {
     };
   },
   
-  methods: {
+methods: {
     async iniciarSesion() {
       try {
-        const data = await loginUsuario(this.dni, this.pass);
-        console.log(data);
-        
 
-        // Guardar token y datos del usuario en localStorage
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('userName', data.nombre);
-        localStorage.setItem('isLogueado', 'true');
-
-        if (data.tipo === "admin") {
-          localStorage.setItem('isAdmin', 'true');
-        } else {
-          localStorage.setItem('isAdmin', 'false');
+        this.dni = this.dni.toUpperCase().trim();
+        this.pass = this.pass.trim(); 
+        if (this.dni === "" || this.pass === "") {
+          Swal.fire({
+            title: "Campos vacíos",
+            text: "Por favor, complete ambos campos.",
+            icon: "warning",
+            confirmButtonText: "Aceptar"
+          });
+          return;
         }
 
+        const data = await loginUsuario(this.dni, this.pass);
+       
+        const decoded = jwtDecode.default(data.token);
+      
+        // Guardar token y datos del usuario en sessionStorage o sessionStorage
+        sessionStorage.setItem('token', data.token)
+        sessionStorage.setItem('isLogueado', 'true')
+        sessionStorage.setItem('isAdmin', decoded.tipo === 'admin' ? 'true' : 'false')
+        sessionStorage.setItem('isUsuario', decoded.tipo !== 'admin' ? 'true' : 'false')
+        sessionStorage.setItem('userName', data.nombre)
+        sessionStorage.setItem('dni', this.dni)
+
+        // Redirigir al inicio y recargar para que Navbar se actualice
+        this.$router.push({ name: 'Inicio' }).then(() => window.location.reload())
+ 
         Swal.fire({
           title: "Bienvenido",
           text: `Hola ${data.nombre}`,
           icon: "success",
           showConfirmButton: false,
-          timer: 2000
+          timer: 3000
         });
         // Redirigir a la página de inicio y recargar con $router
         // $router se usa para evitar problemas de historial en SPA
         // window.location.reload() recarga la página para reflejar el estado autenticado
-        this.$router.push({ name: 'Inicio' }).then(() => window.location.reload());
+
 
       } catch (error) {
         console.error("Error en iniciarSesion:", error);
@@ -85,14 +101,9 @@ export default {
         });
       }
     },
-        // Función única: capitaliza y asigna en el mismo paso
-    capitalizarTexto() {
-      this.dni = this.dni.toUpperCase().trim();
-    }
   }
 };
 </script>
-
 <style>
 .form-label {
   background-color: transparent !important;

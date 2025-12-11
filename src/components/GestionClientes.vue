@@ -288,9 +288,9 @@
       </div>
     </form>
     <!-- Lista de Clientes -->
-    <div class="table-responsive">
+    <div class="table-responsive" v-if="isAdmin">
       <h4 class="text-center w-100 ">Listado Clientes</h4>
-      <table class="table table-bordered table-striped w-100 aling-middle" v-if="isAdmin">
+      <table class="table table-bordered table-striped w-100 aling-middle">
         <thead class="table-primary">
           <tr>
             <th class="text-center">ID</th>
@@ -337,7 +337,7 @@
     </div>
   </div>
   <!-- Navegación de página-->
-  <div class="d-flex justify-content-center my-3">
+  <div class="d-flex justify-content-center my-3" v-if="isAdmin">
         <button class="btn btn-outline-primary btn-sm me-2 rounded-0 border-1 shadow-none" 
         @click = "beforePagina" :disabled="currentPage <= 1">
           <i class="bi bi-chevron-left "></i>
@@ -362,11 +362,11 @@ import {
 } from "@/api/clientes.js";
 import Swal from "sweetalert2";
 import bcrypt from "bcryptjs";
+import { esAdmin } from "../api/authApi";
 //import { ref } from 'vue';
 
 //SCRIPT CRUD
 
-const isAdmin = localStorage.getItem('isAdmin') === 'true'
 
 const nuevoCliente = ref({
   dni: "",
@@ -399,13 +399,41 @@ const numClientes = ref(0);
 const currentPage = ref(1);
 const clientesPorPage = 10;
 let totalPages = 0;
-
+const isAdmin = ref(false);
+const isLogueado = ref(false);
 
 /// zona CargarClientes
 
 // Zona Cargar clientes Al Montar el componente
 onMounted(async () => {
-  cargarClientes()
+  isAdmin.value = await esAdmin();
+  const token = sessionStorage.getItem('token')
+  if (!token) {
+    isLogueado.value = false;
+  } else {
+    isLogueado.value = true;
+  }
+  if (isAdmin.value) cargarClientes()
+  if (isLogueado.value == true) {
+    const cliente = await getClientePorDni(sessionStorage.getItem('dni'))
+    nuevoCliente.value = {
+        dni: cliente.dni,
+        nombre: cliente.nombre,
+        apellidos: cliente.apellidos,
+        email: cliente.email,
+        movil: cliente.movil,
+        direccion: cliente.direccion,
+        provincia: cliente.provincia,
+        municipio: cliente.municipio,
+        fecha_alta: cliente.fecha_alta,
+        historico: cliente.historico,
+        lopd: cliente.lopd, // aceptación del aviso legal (L.O.P.D.)
+        tipoCliente: cliente.tipoCliente,
+        tipo: cliente.tipo
+    };
+    editando.value = true
+    clienteEditandoId.value = cliente.id
+  }
   totalPages = Math.ceil(numClientes.value / clientesPorPage); 
   currentPage.value = 1;
 });

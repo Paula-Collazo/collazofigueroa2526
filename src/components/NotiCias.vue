@@ -59,16 +59,20 @@
 import { ref, onMounted } from "vue";
 import Swal from "sweetalert2";
 import { getNoticias, addNoticia, deleteNoticia } from "@/api/noticias.js";
+import { esAdmin } from "../api/authApi";
 
-const isAdmin = localStorage.getItem('isAdmin') === 'true'
+ 
 
 
 const noticias = ref([]);
 const isExpanded = ref({});
 const nuevoTitulo = ref("");
 const nuevoContenido = ref("");
+let isAdmin = ref(false);
+
 
 onMounted(async () => {
+isAdmin.value = await esAdmin();
   const lista = await getNoticias();
   // Ordenar de más nueva a más vieja
   noticias.value = lista.sort(

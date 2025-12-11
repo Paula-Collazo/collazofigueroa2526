@@ -13,8 +13,20 @@ import dotenv from "dotenv";
 import articulosRoutes from "./articulosRoutes.js"; // ruta al router backend
 import authRouter from "./authRouter.js";
 
-dotenv.config();
+//Rutas de contacto
+import contactoRoutes from "./contactoRoutes.js";
+
 const app = express();
+
+const corsOptions = {
+  origin: "http://localhost:5173", // Reemplaza con el origen de tu frontend
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
+
+dotenv.config();
 const PORT = process.env.PORT || 5000; // Use PORT from environment or default to 5000
 console.log("PORT =", PORT);
 
@@ -23,8 +35,9 @@ const __dirname = path.dirname(__filename);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Middleware
-app.use(cors()); // si no funciona lo siguiente
 app.use(express.json());
+
+app.use("/api/contacto", contactoRoutes);
 
 app.use("/api/auth", authRouter)
 

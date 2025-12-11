@@ -30,16 +30,16 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/noticias">Noticias</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAdmin">
             <router-link class="nav-link" to="/modelos">Modelos</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/contacto">Contacto</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAdmin">
             <router-link class="nav-link" to="/CitasTaller">Citas Taller</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" >
             <router-link class="nav-link" to="/ventas">Ventas</router-link>
           </li>
         </ul>
@@ -61,6 +61,7 @@
             <li v-if="!isLogueado"><router-link class="dropdown-item" to="/clientes">Registro</router-link></li>
             <!-- Mostra “Cerrar Sesión” se está logueado -->
             <li v-if="isLogueado">
+              <router-link class="dropdown-item" to="/clientes">Perfil</router-link>
               <a class="dropdown-item" href="#" @click.prevent="logout">Cerrar Sesión</a>
             </li>
           </ul>
@@ -71,37 +72,50 @@
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
-
 import { ref, onMounted } from 'vue'
+import { esAdmin } from '../api/authApi'  // importamos la función que ya tenemos
 
-// Estado do login
 const isLogueado = ref(false)
+const isAdmin = ref(false)
+const isUsuario = ref(false)
 const userName = ref('')
 
-// Cando o componente se monta, le localStorage (para cando montes a autenticación)
-onMounted(() => {
-  isLogueado.value = localStorage.getItem('isLogueado') === 'true'
-  userName.value = localStorage.getItem('userName') || ''
+// Se ejecuta al montar el componente
+onMounted(async () => {
+  const token = sessionStorage.getItem('token')
+  if (!token) {
+    isLogueado.value = false
+    isAdmin.value = await esAdmin()
+    isUsuario.value = false
+    userName.value = ''
+    return
+  }
+
+  try {
+    // Decidir si es admin usando la función del frontend
+    isAdmin.value = await esAdmin()
+    isUsuario.value = !isAdmin.value
+    isLogueado.value = true
+    userName.value = sessionStorage.getItem('userName') || ''
+  } catch (err) {
+    console.error('Error verificando si es admin', err)
+    sessionStorage.clear()
+    isLogueado.value = false
+    isAdmin.value = false
+    isUsuario.value = false
+    userName.value = ''
+  }
 })
 
 // Logout
 function logout() {
-  // Borra datos de sesión do localStorage
-  localStorage.removeItem('isLogueado')
-  localStorage.removeItem('userName')
-  localStorage.removeItem('isAdmin')
-  localStorage.removeItem('isUsuario')
-
-  // Actualiza estado
+  sessionStorage.clear()
   isLogueado.value = false
+  isAdmin.value = false
+  isUsuario.value = false
   userName.value = ''
-
-  // Redirixe ao inicio recargando a páxina
   window.location.href = '/'
 }
-
-// No necesita lógica
 </script>
 
 <style>
