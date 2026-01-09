@@ -209,7 +209,7 @@
       <!-- Aviso Legal -->
 
       <!-- Contraseña -->
-      <div class="row mb-3">
+      <div class="row mb-3" >
         <div class="row g-2 justify-content-center mt-2">
           <div class="col-md-3 d-flex mt-3 align-items-center">
             <label class="me-2 mb-0 text-nowrap align-middle"
@@ -219,6 +219,7 @@
               type="password"
               v-model="nuevoCliente.password"
               class="form-control"
+              :disabled="isAdmin"
               required
             />
           </div>
@@ -232,6 +233,7 @@
               type="password"
               v-model="nuevoCliente.password2"
               class="form-control"
+              :disabled="isAdmin"
               required
             />
           </div>
@@ -275,7 +277,7 @@
         </div>
 
         <!-- Checkbox al final -->
-        <div class="form-check form-switch ms-3">
+        <div class="form-check form-switch ms-3" v-if="isAdmin">
           <input
             type="checkbox"
             id="historico"
@@ -322,7 +324,7 @@
                 <i class="bi bi-pencil"></i>
               </button>
               <button
-                v-if="cliente.historico === false"
+                v-if="!cliente.historico"
                 @click="activarCliente(cliente)"
                 class="btn btn-secondary btn-sm ms-2 border-0 shadow-none rounded-0"
                 title="Activar cliente"
@@ -427,7 +429,7 @@ onMounted(async () => {
         municipio: cliente.municipio,
         fecha_alta: cliente.fecha_alta,
         historico: cliente.historico,
-        lopd: cliente.lopd, // aceptación del aviso legal (L.O.P.D.)
+        lopd: cliente.lopd,
         tipoCliente: cliente.tipoCliente,
         tipo: cliente.tipo
     };
@@ -615,9 +617,13 @@ const guardarCliente = async () => {
     //   fecha_alta: '',
     //   historico: true
     // };
+    if (!editando.value) {
+      limpiarCampos()
+    } else {
+      nuevoCliente.value.password = "";
+    }
     editando.value = false;
     clienteEditandoId.value = null;
-    limpiarCampos()
 
     // Reset validaciones si tienes (dniValido, movilValido, etc)
     dniValido.value = true;
@@ -637,8 +643,6 @@ const guardarCliente = async () => {
     });
   }
 };
-
-
 
 // Funcion Eliminar Cliente con patch (histórico a false)
 const eliminarCliente = async (movil) => {
@@ -1020,8 +1024,4 @@ const validarPassword = () => {
   cursor: not-allowed;
   color: #495057; /* slightly muted text color */
 }
-
-
-
-
 </style>

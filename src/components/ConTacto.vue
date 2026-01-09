@@ -4,7 +4,7 @@
       <div class="col-12 col-md-8 col-lg-6">
         <div class="card shadow-sm border-0">
           <div class="d-flex justify-content-center">
-            <h2 class="text-center mb-3 text-primary fw-bold">
+            <h2 class="text-center mb-3 fw-bold" style="color: #7a0f16;">
               <i class="bi bi-envelope-fill me-2"></i>
               Contáctanos
             </h2>

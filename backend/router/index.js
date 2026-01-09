@@ -1,15 +1,16 @@
-import NotFound from "../components/NotFound.vue";
-import PaginaInicio from "../components/PaginaInicio.vue"
-import GestionClientes from "../components/GestionClientes.vue";
-import NotiCias from "../components/NotiCias.vue";
-import AvisoLegal from "../components/AvisoLegal.vue";
-import PoliticaPrivacidad from "../components/PoliticaPrivacidad.vue";
-import ModeLos from "../components/ModeLos.vue"; 
-import CitasTaller from "../components/CitasTaller.vue";
-import TablaLogin from "../components/TablaLogin.vue";
-import VenTas from "../components/VenTas.vue";
+import NotFound from "../../src/components/NotFound.vue";
+import PaginaInicio from "../../src/components/PaginaInicio.vue"
+import GestionClientes from "../../src/components/GestionClientes.vue";
+import NotiCias from "../../src/components/NotiCias.vue";
+import AvisoLegal from "../../src/components/AvisoLegal.vue";
+import PoliticaPrivacidad from "../../src/components/PoliticaPrivacidad.vue";
+import ModeLos from "../../src/components/ModeLos.vue"; 
+import CitasTaller from "../../src/components/CitasTaller.vue";
+import TablaLogin from "../../src/components/TablaLogin.vue";
+import VenTas from "../../src/components/VenTas.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import ConTacto from "../components/ConTacto.vue";
+import ConTacto from "../../src/components/ConTacto.vue";
+import BusCar from "../../src/components/BusCar.vue";
 
 
 const routes = [
@@ -67,6 +68,11 @@ const routes = [
         path: '/contacto',
         name: 'Contacto',
         component: ConTacto
+    }, 
+    {
+        path: "/buscar",
+        name: "BusCar",
+        component: BusCar
     }
     
 

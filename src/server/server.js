@@ -47,6 +47,17 @@ app.use("/api/auth", authRouter)
 // Por eso json-server no requiere rutas y Express sí.
 app.use("/api/articulos", articulosRoutes);
 
+app.post("/ia", async (req, res) => {
+  try {
+    const { mensaje } = req.body;
+    const reply = `Bot dice: He recibido tu mensaje "${mensaje}" y estoy aquí para ayudarte.`;
+    res.json({ reply });
+  } catch (error) {
+    console.error("Error en /ia:", error);
+    res.status(500).json({ error: "Error procesanto el mensaje" });
+  }
+});
+
 // Verificar variable
 //console.log("MONGODB_URI =", process.env.MONGODB_URI);
 

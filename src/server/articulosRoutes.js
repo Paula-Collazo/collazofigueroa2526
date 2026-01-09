@@ -2,7 +2,7 @@
 import express from "express";
 import multer from "multer";
 import path from "path";
-import Articulo from  "../modelos/Articulo.js";
+import Articulo from  "../../backend/modelos/Articulo.js";
 import { fileURLToPath } from "url";
 import fs from 'fs';
 
@@ -73,6 +73,27 @@ router.post("/", upload.single('imagen'), async (req, res) => {
   }
 });
 
+router.get("/buscar", async (req, res) => {
+  const {q} = req.query;
+
+  if (!q) return res.json([]);
+
+  const regex = new RegExp(q, "i");
+// supongamos solo la marca modelo y descripción
+  try {
+    const articulos = await Articulo.find({
+      $or: [
+      { marca: regex },
+      { modelo: regex },
+      { descripcion: regex }
+      ]
+      });
+
+    res.json(articulos);
+  } catch (err) {
+    res.status(500).json({ error: "Error en la búsqueda" });
+  }
+});
 
 // otras rutas PUT, DELETE, GET /:id igual
 

@@ -24,7 +24,7 @@
           <li class="nav-item">
             <router-link class="nav-link" to="/">Inicio</router-link>
           </li>
-          <li class="nav-item">
+          <li class="nav-item" v-if="isAdmin">
             <router-link class="nav-link" to="/clientes">Clientes</router-link>
           </li>
           <li class="nav-item">
@@ -43,6 +43,21 @@
             <router-link class="nav-link" to="/ventas">Ventas</router-link>
           </li>
         </ul>
+        <!-- BUSCADOR alineado a la derecha -->
+        <form class="d-flex ms-auto me-2" role="search" @submit.prevent="buscar" v-if="isAdmin">
+        <input
+        class="form-control form-control-sm me-2 rounded-0"
+        type="search"
+        placeholder="Buscar..."
+        aria-label="Buscar"
+        v-model="query"
+        style="width: 140px;"
+        />
+        <button class="btn btn-light btn-sm rounded-0" type="submit">
+        <i class="bi bi-search"></i>
+        </button>
+        </form>
+
         <!-- Dropdown de acceso/registro -->
         <div class="dropdown ms-auto">
           <button
@@ -72,8 +87,27 @@
 </template>
 
 <script setup>
+
+
 import { ref, onMounted } from 'vue'
-import { esAdmin } from '../api/authApi'  // importamos la función que ya tenemos
+import { useRouter } from 'vue-router'
+import { esAdmin } from '../api/authApi' 
+const router = useRouter()
+const query = ref('') // IMPORTANTE: esto evita el warning
+// Función que se llama al hacer submit en el buscador
+
+function buscar() {
+if (!query.value.trim()) return
+
+
+router.push({
+name: 'BusCar',
+query: { q: query.value.trim() }
+})
+query.value = ''// opcional: limpiar input después de enviar
+}
+
+ // importamos la función que ya tenemos
 
 const isLogueado = ref(false)
 const isAdmin = ref(false)
@@ -116,6 +150,8 @@ function logout() {
   userName.value = ''
   window.location.href = '/'
 }
+
+
 </script>
 
 <style>

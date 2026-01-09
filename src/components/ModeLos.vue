@@ -196,11 +196,14 @@
                     <button class="btn btn-primary rounded border shadow-none px-4" type="submit">{{ editando ?
                         "Modificar" : "Guardar" }}</button>
                 </div>
+                <div>
+                    <button @click="imprimirPDF" class="btn btn-secondary rounded border shadow-none px-4" type="submit"><i class="bi bi-printer"></i>Imprimir</button>
+                </div>
             </div>
         </form>
     <div class="table-responsive">
       <h4 class="text-center mb-1" style="color: #7a0f16;">Listado de Modelos</h4>
-    <table class="table table-bordered table-striped table-sm table-hover table-sm align-middle">
+     <table class="table table-bordered table-striped table-sm table-hover table-sm align-middle">
         <thead>
           <tr class="table-primary text-center">
             <th>Matrícula</th>
@@ -212,18 +215,47 @@
           </tr>
         </thead>
         <tbody>
-          <!-- aquí se agregarán las filas de modelos dinámicamente -->
+          <tr v-for="modelo in modelos" :key="modelo._id" class="text-center">
+            <td>{{ modelo.matricula }}</td>
+            <td>{{ modelo.marca }}</td>
+            <td>{{ modelo.modelo }}</td>
+            <td>{{ modelo.estado }}</td>
+            <td>
+              <div>{{ modelo.contacto.nombre }} {{ modelo.contacto.telefono }}</div>
+            </td>
+            <td>
+              <button class="btn btn-sm btn-primary me-2" @click="editando = true; vehiculo = {...modelo}">
+                <i class="bi bi-pencil"></i>
+              </button>
+            </td>
+          </tr>
         </tbody>
-      </table>
+    </table>
     </div>
-    </div>
+  </div>
 </template>
 
 <script setup>
 import Swal from "sweetalert2"
-import { ref, computed } from "vue"
-import { addArticulo } from "@/api/articulos.js"
+import { ref, computed, onMounted } from "vue"
+import { addArticulo, getArticulos } from "@/api/articulos.js"
 import provmuniData from "@/data/provmuni.json"
+import { jsPDF } from "jspdf"
+import 'jspdf-autotable'
+
+// Mis cambios
+const modelos = ref([])
+
+onMounted(async() => {
+  cargarModelos();
+});
+
+const cargarModelos = () => {
+  getArticulos().then(data => {
+    console.log(data)
+    modelos.value = data;
+  })
+}
 
 const vehiculo = ref({
     tipo: "",
@@ -494,5 +526,55 @@ const onFileChange = (event) => {
     if (file) {
         archivo.value = file;
     }
+};
+
+const imprimirPDF = () => {
+    const doc = new jsPDF();
+
+    if (typeof doc.autoTable === "function") {
+        console.log("autoTable está disponible");
+    } else {
+        console.error("autoTable NO está disponible en esta instancia de jsPDF");
+    }
+
+    const fecha = new Date().toISOString().split('T')[0];
+    doc.setFontSize(16);
+    doc.text("Listado de Vehículos", 75, 20);
+
+    let y = 30;
+    doc.setFontSize(10);
+    doc.text(`Fecha: ${fecha}`, 85, 25);
+
+    const headers = ["Matrícula", "Marca", "Modelo", "Estado", "Combustible", "Precio"];
+
+    doc.autoTable({
+        startY: y,
+        head: [headers],
+        body: modelos.value.map(modelo => [
+            modelo.matricula,
+            modelo.marca,
+            modelo.modelo,
+            modelo.estado,
+            modelo.combustible,
+            modelo.precio = modelo.precio + ' €'
+        ]),
+        theme: 'grid',
+        styles: { fontSize: 10, cellPadding: 3 },
+        columnStyles: {
+            0: { halign: 'center' }, // Matrícula
+            1: { halign: 'left' }, // Marca
+            2: { halign: 'left'  }, // Modelo
+            3: { halign: 'center' }, // Estado
+            4: { halign: 'center' }, // Combustible
+            5: { halign: 'right' }  // Precio
+        }
+    });
+
+    const hora = new Date().toLocaleTimeString().split(' ')[0];
+    const filePDF = `listado_vehiculos_${fecha}_${hora.replace(/:/g, '-')}.pdf`;
+
+
+    doc.save(filePDF);
+    
 };
 </script>
