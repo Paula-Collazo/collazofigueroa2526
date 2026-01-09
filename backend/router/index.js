@@ -1,16 +1,16 @@
-import NotFound from "../../src/components/NotFound.vue";
-import PaginaInicio from "../../src/components/PaginaInicio.vue"
-import GestionClientes from "../../src/components/GestionClientes.vue";
-import NotiCias from "../../src/components/NotiCias.vue";
-import AvisoLegal from "../../src/components/AvisoLegal.vue";
-import PoliticaPrivacidad from "../../src/components/PoliticaPrivacidad.vue";
-import ModeLos from "../../src/components/ModeLos.vue"; 
-import CitasTaller from "../../src/components/CitasTaller.vue";
-import TablaLogin from "../../src/components/TablaLogin.vue";
-import VenTas from "../../src/components/VenTas.vue";
+import NotFound from "../../frontend/components/NotFound.vue";
+import PaginaInicio from "../../frontend/components/PaginaInicio.vue"
+import GestionClientes from "../../frontend/components/GestionClientes.vue";
+import NotiCias from "../../frontend/components/NotiCias.vue";
+import AvisoLegal from "../../frontend/components/AvisoLegal.vue";
+import PoliticaPrivacidad from "../../frontend/components/PoliticaPrivacidad.vue";
+import ModeLos from "../../frontend/components/ModeLos.vue"; 
+import CitasTaller from "../../frontend/components/CitasTaller.vue";
+import TablaLogin from "../../frontend/components/TablaLogin.vue";
+import VenTas from "../../frontend/components/VenTas.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import ConTacto from "../../src/components/ConTacto.vue";
-import BusCar from "../../src/components/BusCar.vue";
+import ConTacto from "../../frontend/components/ConTacto.vue";
+import BusCar from "../../frontend/components/BusCar.vue";
 
 
 const routes = [
