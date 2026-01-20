@@ -11,6 +11,9 @@ import VenTas from "../../frontend/components/VenTas.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import ConTacto from "../../frontend/components/ConTacto.vue";
 import BusCar from "../../frontend/components/BusCar.vue";
+import CesTa from "../../frontend/components/CesTa.vue";
+import PaymentSuccess from "../../frontend/components/PaymentSuccess.vue";
+import PaymentCancel from "../../frontend/components/PaymentCancel.vue";
 
 
 const routes = [
@@ -73,7 +76,24 @@ const routes = [
         path: "/buscar",
         name: "BusCar",
         component: BusCar
+    },
+    {
+        path: '/cesta',
+        name: 'CesTa',
+        component: CesTa
+    },
+    {
+        path: '/PaymentSuccess',
+        name: 'PaymentSuccess',
+        component: PaymentSuccess
+    },
+    {
+        path: '/PaymentCancel',
+        name: 'PaymentCancel',
+        component: PaymentCancel
     }
+    
+    
     
 
 ]

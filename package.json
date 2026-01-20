@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.0.1",
+    "@stripe/stripe-js": "^8.6.1",
     "axios": "^1.12.2",
     "bcryptjs": "^3.0.3",
     "bootstrap": "^5.3.8",
@@ -29,8 +30,10 @@
     "mongose": "^0.0.2-security",
     "multer": "^2.0.2",
     "nvm": "^0.0.4",
+    "pinia": "^3.0.4",
     "resend": "^6.6.0",
     "router": "^2.2.0",
+    "stripe": "^20.1.2",
     "sweetalert2": "^11.23.0",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"

@@ -4,42 +4,45 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-
-
 // a diferencia de json-server, aquí necesita configurar las rutas y controladores manualmente
 // json-server crea automáticamente las rutas basadas en el archivo JSON, mongoose requiere definir esquemas y modelos
 // MONGOSEE NO SABE NADA DE RUTAS CONTROLADRES Y MODELOS, HAY QUE CREARLOS MANUALMENTE
-
+import authRouter from "./authRouter.js"
 import articulosRoutes from "./articulosRoutes.js"; // ruta al router backend
-import authRouter from "./authRouter.js";
-
-//Rutas de contacto
-import contactoRoutes from "./contactoRoutes.js";
-
-const app = express();
-
-const corsOptions = {
-  origin: "http://localhost:5173", // Reemplaza con el origen de tu frontend
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
-  credentials: true,
-};
-app.use(cors(corsOptions));
+import contactoRoutes from "./contactoRoutes.js"
+import Stripe from "stripe";
 
 dotenv.config();
+const app = express();
 const PORT = process.env.PORT || 5000; // Use PORT from environment or default to 5000
-console.log("PORT =", PORT);
+// const MONGODB_URI = process.env.MONGODB_URI;
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+// app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
 
 // Middleware
+// app.use(cors()); //si no funciona lo siguiente
+// app.use(express.json());
+
+// Configuración de CORS
+// Permite peticiones desde tu frontend Vite
+app.use((cors({
+  origin: "http://localhost:5173", // Cambia si tu frontend usa otro puerto
+  credentials: true
+})))
+
+// Middleware para parsear JSON
 app.use(express.json());
 
-app.use("/api/contacto", contactoRoutes);
+// Carpeta de uploads
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use("/api/auth", authRouter)
+// Rutas de autenticación
+app.use('/api/auth', authRouter);
 
 // Rutas DE MONGOOSE, JSON SERVER NO ES NECESARIO LAS RUTAS LAS CREA AUTOMATICAMENTE
 // json-server es un backend ya construido.
@@ -47,19 +50,65 @@ app.use("/api/auth", authRouter)
 // Por eso json-server no requiere rutas y Express sí.
 app.use("/api/articulos", articulosRoutes);
 
-app.post("/ia", async (req, res) => {
+// Verificar variable
+//console.log("MONGODB_URI =", process.env.MONGODB_URI);
+
+
+// Rutas de contacto
+app.use("/api/contacto", contactoRoutes);
+
+// Configuración de CORS modificado para correo
+
+const corsOptions = {
+  origin: "http://localhost:5173", // tu frontend
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
+
+// Configuración de Stripe carga de la clave secreta const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+
+// ruta crear sescion checkout
+app.post("/crear-checkout-session", async (req, res) => {
   try {
-    const { mensaje } = req.body;
-    const reply = `Bot dice: He recibido tu mensaje "${mensaje}" y estoy aquí para ayudarte.`;
-    res.json({ reply });
-  } catch (error) {
-    console.error("Error en /ia:", error);
-    res.status(500).json({ error: "Error procesanto el mensaje" });
+    const { items } = req.body;
+
+  const lineItems = items.map(item => ({
+    price_data: {
+      currency: 'eur',
+      product_data: {
+        name: item.nombre,
+      },
+    unit_amount: Math.round(item.precio * 100), // convertir a centimos
+  },
+    quantity: item.cantidad,
+  }));
+
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: lineItems,
+    mode: "payment",
+    success_url: 'http://localhost:5173/PaymentSuccess', //crear estos componentes en frontend
+    cancel_url: 'http://localhost:5173/PaymentCancel', //crear estos componentes en frontend
+  });
+
+res.json({ url: session.url });
+}
+  catch (error) {
+  console.error("Error creating checkout session:", error);
+  res.status(500).json({ error: "Internal Server Error"});
   }
 });
 
-// Verificar variable
-//console.log("MONGODB_URI =", process.env.MONGODB_URI);
+// // Ruta para manejar peticiones de IA
+// app.post("/ia", async (req, res) => {
+//   try {
+//   const { message } = req.body;
+// }
+// } catch
+// )
 
 /// Conexión a MongoDB
 mongoose
