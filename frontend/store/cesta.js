@@ -10,7 +10,7 @@ export const useCestaStore = defineStore('cesta', {
 
 state: () => ({
 // Array que contendrá los productos que el usuario añada a la cesta
-    items: []
+    items: JSON.parse(localStorage.getItem('cesta') || '[]')
 }),
 
 
@@ -28,7 +28,7 @@ getters: {
     // AQUÍ SE PODRÍA AÑADIR LÓGICA DE DESCUENTOS, IMPUESTOS, ETC.
     totalPrecio (state) {
         return state.items.reduce(
-            (total, item) => total + item.precio * item.cantidad,
+            (total, item) => total + (item.precio_unitario || item.precio) * item.cantidad,
             0
             )
     }
@@ -73,7 +73,20 @@ actions: {
 
     // Vacía toda la cesta
     clearCesta() {
-    this.items = []
+      this.items = []
+      localStorage.removeItem('cesta')
+    },
+    
+    // Alias para claridad (limpiarCart)
+    limpiarCart() {
+      this.clearCesta()
+    },
+    
+    // Función para setup subscriptions después de que Pinia esté listo
+    setupPersistence() {
+      this.$subscribe((mutation, state) => {
+        localStorage.setItem('cesta', JSON.stringify(state.items))
+      })
     }
   }
 })

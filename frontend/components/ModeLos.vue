@@ -241,7 +241,7 @@ import { ref, computed, onMounted } from "vue"
 import { addArticulo, getArticulos } from "@/api/articulos.js"
 import provmuniData from "@/data/provmuni.json"
 import { jsPDF } from "jspdf"
-import 'jspdf-autotable'
+import "jspdf-autotable"
 
 // Mis cambios
 const modelos = ref([])
@@ -531,43 +531,38 @@ const onFileChange = (event) => {
 const imprimirPDF = () => {
     const doc = new jsPDF();
 
-    if (typeof doc.autoTable === "function") {
-        console.log("autoTable está disponible");
-    } else {
-        console.error("autoTable NO está disponible en esta instancia de jsPDF");
-    }
-
     const fecha = new Date().toISOString().split('T')[0];
     doc.setFontSize(16);
     doc.text("Listado de Vehículos", 75, 20);
 
-    let y = 30;
     doc.setFontSize(10);
     doc.text(`Fecha: ${fecha}`, 85, 25);
 
+    // Crear tabla manualmente sin autoTable
+    let yPosition = 35;
+    const columnX = [15, 35, 60, 90, 130, 165];
     const headers = ["Matrícula", "Marca", "Modelo", "Estado", "Combustible", "Precio"];
 
-    doc.autoTable({
-        startY: y,
-        head: [headers],
-        body: modelos.value.map(modelo => [
-            modelo.matricula,
-            modelo.marca,
-            modelo.modelo,
-            modelo.estado,
-            modelo.combustible,
-            modelo.precio = modelo.precio + ' €'
-        ]),
-        theme: 'grid',
-        styles: { fontSize: 10, cellPadding: 3 },
-        columnStyles: {
-            0: { halign: 'center' }, // Matrícula
-            1: { halign: 'left' }, // Marca
-            2: { halign: 'left'  }, // Modelo
-            3: { halign: 'center' }, // Estado
-            4: { halign: 'center' }, // Combustible
-            5: { halign: 'right' }  // Precio
-        }
+    // Headers
+    doc.setFont(undefined, 'bold');
+    headers.forEach((header, i) => {
+      doc.text(header, columnX[i], yPosition);
+    });
+    
+    yPosition += 8;
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
+    
+    // Datos
+    modelos.value.forEach(modelo => {
+      doc.text(String(modelo.matricula || ''), columnX[0], yPosition);
+      doc.text(String(modelo.marca || ''), columnX[1], yPosition);
+      doc.text(String(modelo.modelo || ''), columnX[2], yPosition);
+      doc.text(String(modelo.estado || ''), columnX[3], yPosition);
+      doc.text(String(modelo.combustible || ''), columnX[4], yPosition);
+      doc.text(`${modelo.precio || 0} €`, columnX[5], yPosition);
+      
+      yPosition += 7;
     });
 
     const hora = new Date().toLocaleTimeString().split(' ')[0];
