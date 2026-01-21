@@ -53,6 +53,7 @@
 import {useCestaStore} from '@/store/cesta.js'
 import axios from 'axios'    
 import Swal from 'sweetalert2'
+import { ref } from 'vue'
 
 
 
@@ -61,6 +62,9 @@ const cesta = useCestaStore()
 const incrementar = (id) => cesta.incrementar (id)
 const decrementar = (id) => cesta.decrementar (id)
 const removeProducto = (id) => cesta.removeProducto(id)
+const isUsuario = ref(
+    sessionStorage.getItem('isUsuario') === 'true'
+)
 
 const mostrarAlerta = (titulo, mensaje, tipo = 'info') => {
     Swal.fire({
@@ -71,8 +75,26 @@ const mostrarAlerta = (titulo, mensaje, tipo = 'info') => {
     })
 }
 
+const mostrarAlertaCesta = (titulo, mensaje, tipo = 'info', ruta = '/') => {
+  Swal.fire({
+    title: titulo,
+    text: mensaje,
+    icon: tipo,
+    confirmButtonText: 'Ir a iniciar sesión/Registro',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      window.location.href = ruta
+    }
+  })
+}
+
+
 // Iniciar pago con Stripe usando axios
 const iniciarPago = async () => {
+    if (!isUsuario.value) {
+        mostrarAlertaCesta('Error', 'Debes iniciar sesión para realizar el pago', 'error', '/login')
+        return
+    }
     if (!cesta.items.length) {
         mostrarAlerta('Aviso', 'La cesta está vacía', 'warning')
         return
