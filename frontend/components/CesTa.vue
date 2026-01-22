@@ -65,6 +65,9 @@ const removeProducto = (id) => cesta.removeProducto(id)
 const isUsuario = ref(
     sessionStorage.getItem('isUsuario') === 'true'
 )
+const isAdmin = ref(
+    sessionStorage.getItem('isAdmin') === 'true'
+)
 
 const mostrarAlerta = (titulo, mensaje, tipo = 'info') => {
     Swal.fire({
@@ -91,7 +94,7 @@ const mostrarAlertaCesta = (titulo, mensaje, tipo = 'info', ruta = '/') => {
 
 // Iniciar pago con Stripe usando axios
 const iniciarPago = async () => {
-    if (!isUsuario.value) {
+    if (!isUsuario.value && !isAdmin.value) {
         mostrarAlertaCesta('Error', 'Debes iniciar sesión para realizar el pago', 'error', '/login')
         return
     }

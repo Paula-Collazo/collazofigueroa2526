@@ -11,6 +11,7 @@ import authRouter from "./authRouter.js"
 import articulosRoutes from "./articulosRoutes.js"; // ruta al router backend
 import contactoRoutes from "./contactoRoutes.js"
 import Stripe from "stripe";
+import facturaRoutes from "./facturaRoutes.js";
 
 dotenv.config();
 const app = express();
@@ -53,9 +54,11 @@ app.use("/api/articulos", articulosRoutes);
 // Verificar variable
 //console.log("MONGODB_URI =", process.env.MONGODB_URI);
 
+app.use("/api/facturas", facturaRoutes);
 
 // Rutas de contacto
 app.use("/api/contacto", contactoRoutes);
+
 
 // Configuración de CORS modificado para correo
 
