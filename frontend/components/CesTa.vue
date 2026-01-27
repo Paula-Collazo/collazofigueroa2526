@@ -34,8 +34,21 @@
         </tbody>
     </table>
 
+    <div>
+        <label for="descuento">Introduce tu codigo de descuento</label>
+        <input type="text" id="descuento" name="descuento" class="form-control w-25 d-inline-block ms-2" placeholder="Codigo de descuento" v-model="codigoDescuento" @change="actualizarDescuento">
+    </div>
+
     <div class="d-flex justify-content-between align-items-center at-3">
-        <h5>Total: {{cesta.totalPrecio }} €</h5>
+        <h5>
+            Total:
+            {{
+                codigoDescuento === 'DESCUENTO'
+                ? (cesta.totalPrecio * 0.9)
+                : cesta.totalPrecio
+            }}
+            €
+</h5>
         <button class="btn btn-success" @click="iniciarPago">Iniciar Pago</button>
     </div>
     <!-- <div class="text-end mt-3">
@@ -56,12 +69,12 @@ import Swal from 'sweetalert2'
 import { ref } from 'vue'
 
 
-
 const cesta = useCestaStore()
 
 const incrementar = (id) => cesta.incrementar (id)
 const decrementar = (id) => cesta.decrementar (id)
 const removeProducto = (id) => cesta.removeProducto(id)
+const codigoDescuento = ref('')
 const isUsuario = ref(
     sessionStorage.getItem('isUsuario') === 'true'
 )
@@ -90,7 +103,6 @@ const mostrarAlertaCesta = (titulo, mensaje, tipo = 'info', ruta = '/') => {
     }
   })
 }
-
 
 // Iniciar pago con Stripe usando axios
 const iniciarPago = async () => {
