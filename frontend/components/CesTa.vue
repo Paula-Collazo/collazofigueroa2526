@@ -36,18 +36,12 @@
 
     <div>
         <label for="descuento">Introduce tu codigo de descuento</label>
-        <input type="text" id="descuento" name="descuento" class="form-control w-25 d-inline-block ms-2" placeholder="Codigo de descuento" v-model="codigoDescuento" @change="actualizarDescuento">
+        <input type="text" id="descuento" name="descuento" class="form-control w-25 d-inline-block ms-2" placeholder="Codigo de descuento" v-model="codigoDescuento" @change="calcularPrecioFinal">
     </div>
 
     <div class="d-flex justify-content-between align-items-center at-3">
         <h5>
-            Total:
-            {{
-                codigoDescuento === 'DESCUENTO'
-                ? (cesta.totalPrecio * 0.9)
-                : cesta.totalPrecio
-            }}
-            €
+            Total: {{ precioFinal.toFixed(2) }}€
 </h5>
         <button class="btn btn-success" @click="iniciarPago">Iniciar Pago</button>
     </div>
@@ -71,16 +65,42 @@ import { ref } from 'vue'
 
 const cesta = useCestaStore()
 
-const incrementar = (id) => cesta.incrementar (id)
-const decrementar = (id) => cesta.decrementar (id)
-const removeProducto = (id) => cesta.removeProducto(id)
+const incrementar = (id) => {
+    cesta.incrementar(id)
+    calcularPrecioFinal()
+}
+
+const decrementar = (id) => {
+    cesta.decrementar(id)
+    calcularPrecioFinal()
+}
+
+const removeProducto = (id) => {
+    cesta.removeProducto(id)
+    calcularPrecioFinal()
+}
 const codigoDescuento = ref('')
+const precioFinal = ref(0)
 const isUsuario = ref(
     sessionStorage.getItem('isUsuario') === 'true'
 )
 const isAdmin = ref(
     sessionStorage.getItem('isAdmin') === 'true'
 )
+
+const calcularPrecioFinal = () => {
+    if (codigoDescuento.value === "DESCUENTO") {
+        precioFinal.value = cesta.totalPrecio * 0.9
+    } else {
+        precioFinal.value = cesta.totalPrecio
+    }
+
+    if (precioFinal.value < 50) {
+        precioFinal.value = precioFinal.value * 1.05
+    }
+}
+
+calcularPrecioFinal()
 
 const mostrarAlerta = (titulo, mensaje, tipo = 'info') => {
     Swal.fire({
