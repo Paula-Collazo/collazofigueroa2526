@@ -207,7 +207,8 @@
       "municipio": "Ademuz",
       "historico": true,
       "lopd": true,
-      "password": "",
+      "tipo": "user",
+      "password": "$2b$10$spop8iZYCAyFSZiY0XqfFO1je.L7k8k6C.qHywRps927myZGhhM4y",
       "id": "ba17"
     },
     {

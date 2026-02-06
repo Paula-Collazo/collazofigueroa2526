@@ -34,16 +34,37 @@
         </tbody>
     </table>
 
-    <div>
-        <label for="descuento">Introduce tu codigo de descuento</label>
-        <input type="text" id="descuento" name="descuento" class="form-control w-25 d-inline-block ms-2" placeholder="Codigo de descuento" v-model="codigoDescuento" @change="calcularPrecioFinal">
+   <div class="row mt-3">
+    <!-- COLUMNA IZQUIERDA -->
+        <div class="col-md-6">
+            <label for="descuento">Introduce tu código de descuento</label>
+            <input
+                type="text"
+                id="descuento"
+                class="form-control w-50"
+                placeholder="Código de descuento"
+                v-model="codigoDescuento"
+                @change="calcularPrecioFinal"
+            >
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div
+            v-if="!isUsuario && !isAdmin"
+            class="col-md-6 text-end"
+        >
+            <p class="mb-1">Debes iniciar sesión o registrarte para comprar:</p>
+            <a href="/login" class="d-block">Iniciar Sesión</a>
+            <a href="/clientes" class="d-block">Registro</a>
+        </div>
     </div>
+
 
     <div class="d-flex justify-content-between align-items-center at-3">
         <h5>
             Total: {{ precioFinal.toFixed(2) }}€
-</h5>
-        <button class="btn btn-success" @click="iniciarPago">Iniciar Pago</button>
+        </h5>
+        <button class="btn btn-success" @click="iniciarPago":disabled="!isUsuario && !isAdmin">Iniciar Pago</button>
     </div>
     <!-- <div class="text-end mt-3">
         <h4>Total: {{ formatoPrecio (totalPrice) }}</h4>
@@ -111,25 +132,25 @@ const mostrarAlerta = (titulo, mensaje, tipo = 'info') => {
     })
 }
 
-const mostrarAlertaCesta = (titulo, mensaje, tipo = 'info', ruta = '/') => {
-  Swal.fire({
-    title: titulo,
-    text: mensaje,
-    icon: tipo,
-    confirmButtonText: 'Ir a iniciar sesión/Registro',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      window.location.href = ruta
-    }
-  })
-}
+// const mostrarAlertaCesta = (titulo, mensaje, tipo = 'info', ruta = '/') => {
+//   Swal.fire({
+//     title: titulo,
+//     text: mensaje,
+//     icon: tipo,
+//     confirmButtonText: 'Ir a iniciar sesión/Registro',
+//   }).then((result) => {
+//     if (result.isConfirmed) {
+//       window.location.href = ruta
+//     }
+//   })
+// }
 
 // Iniciar pago con Stripe usando axios
 const iniciarPago = async () => {
-    if (!isUsuario.value && !isAdmin.value) {
-        mostrarAlertaCesta('Error', 'Debes iniciar sesión para realizar el pago', 'error', '/login')
-        return
-    }
+    // if (!isUsuario.value && !isAdmin.value) {
+    //     mostrarAlertaCesta('Error', 'Debes iniciar sesión para realizar el pago', 'error', '/login')
+    //     return
+    //}
     if (!cesta.items.length) {
         mostrarAlerta('Aviso', 'La cesta está vacía', 'warning')
         return
