@@ -1,6 +1,6 @@
 <template>
   <div id="noticias" class="container py-4 d-flex flex-column gap-4">
-    <h3 class="text-center mt-2 mb-3 d-flex align-items-center justify-content-center" style="color: #7a0f16;">
+    <h3 class="text-center mt-2 mb-3 d-flex align-items-center justify-content-center" style="color: #1F2937;">
       <i class="bi bi-newspaper fs-3 me-2"></i>
       Noticias
     </h3>
@@ -23,13 +23,13 @@
     </div>
 
     <!-- Tabla de noticias -->
-    <table class="table table-borderless mt-3 table-striped">
+    <table class="table table-borderless mt-3 table-striped table-primary">
       <tbody>
         <template v-for="noticia in noticias" :key="noticia.id">
           <tr>
             <td>
               <div class="d-flex justify-content-between align-items-center">
-                <strong class="text" style="color: #7a0f16;">{{ noticia.titulo }}</strong>
+                <strong class="text" style="color: #1F2937;">{{ noticia.titulo }}</strong>
                 <small class="text-muted">{{ noticia.fecha }}</small>
               </div>
             </td>
@@ -139,5 +139,10 @@ const eliminarNoticia = async (id) => {
 </script>
 
 
-<style scoped></style>
+<style scoped>
+.table-primary th {
+  background-color: #2563EB !important;
+  color: white !important;
+}
+</style>
 

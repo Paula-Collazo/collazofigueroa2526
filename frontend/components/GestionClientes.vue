@@ -2,9 +2,9 @@
   <!--Botón centrado-->
 
   <div
-    class="mx-auto mt-2 p-4 pb-5 border rounded-3 shadow-sm min-vh-75 bg-light">
+    class="mx-auto mt-2 p-4 pb-5 border rounded-3 shadow-sm min-vh-75" style="background-color: #F4F6F8;">
     <h3 class="text-center mt-2 mb-3 d-flex align-items-center justify-content-center" 
-    style="color: #7a0f16;">
+    style="color: #1F2937;">
       <i class="bi bi-person-circle fs-3 me-2"></i>
       Gestión de Clientes
     </h3>
@@ -415,7 +415,8 @@ onMounted(async () => {
   } else {
     isLogueado.value = true;
   }
-  if (isAdmin.value) cargarClientes()
+  console.log(isAdmin.value)
+  if (isAdmin.value) await cargarClientes()
   if (isLogueado.value == true) {
     const cliente = await getClientePorDni(sessionStorage.getItem('dni'))
     nuevoCliente.value = {
@@ -471,12 +472,11 @@ const clientesPaginados = computed(() => {
 });
 
 
-const cargarClientes = () => {
-      getClientes(mostrarHistorico.value).then(data => {
-        clientes.value = data;
-        numClientes.value = data.length;  // Actualiza el nº total de clientes
+const cargarClientes = async() => {
+
+      clientes.value = await getClientes(mostrarHistorico.value)
+        numClientes.value = clientes.value.length;  // Actualiza el nº total de clientes
         currentPage.value = 1;  // Reiniciar a la 1era página al cargar
-      })
       Swal.fire({
         icon: 'success',
         title: "Listando Clientes...",
@@ -1000,8 +1000,8 @@ const validarPassword = () => {
 
 <style scoped>
 .is-invalid {
-  border-color: #ff1616 !important;
-  background-color: antiquewhite;
+  border-color: #D1D5DB !important;
+  background-color: #FCE7E7;
 }
 
 .invalid-feedback {
@@ -1014,13 +1014,13 @@ const validarPassword = () => {
 }
 
 .table-primary th {
-  background-color:   #f59191 !important;
-  color: black !important;
+  background-color:   #2563EB !important;
+  color: white !important;
 }
 
 /* Visual for readonly/locked inputs when editing a cliente */
 .readonly-input {
-  background-color: #eef2f6 !important; /* soft gray */
+  background-color: #F4F6F8 !important;
   cursor: not-allowed;
   color: #495057; /* slightly muted text color */
 }

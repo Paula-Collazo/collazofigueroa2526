@@ -1,5 +1,5 @@
 <template>
-  <footer class="navbar navbar-dark bg-danger position-sticky top-0">
+  <footer class="navbar navbar-dark position-sticky top-0" style="background-color: #1F2A44;">
     <div class="container">
       <p class="mb-1 text-white">&copy; {{ new Date().getFullYear() }} MiSitio. Todos los derechos reservados.</p>
       <ul class="list-inline mb-0">

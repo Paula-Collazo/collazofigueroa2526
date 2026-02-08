@@ -4,7 +4,7 @@
       <div class="col-12 col-md-8 col-lg-6">
         <div class="card shadow-sm border-0">
           <div class="d-flex justify-content-center">
-            <h2 class="text-center mb-3 fw-bold" style="color: #7a0f16;">
+            <h2 class="text-center mb-3 fw-bold" style="color: #1F2937;">
               <i class="bi bi-envelope-fill me-2"></i>
               Contáctanos
             </h2>
@@ -92,7 +92,7 @@
     <div class="row justify-content-center mt-5">
       <div class="col-12 col-md-6">
         <div class="card shadow-sm border-0">
-          <div class="card-header bg-primary text-white text-center py-3">
+          <div class="card-header text-white text-center py-3" style="background-color: #2563EB;">
             <h5 class="mb-0">
               <i class="bi bi-geo-alt-fill me-2"></i>
               Nuestra Ubicación

@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-column justify-content-center align-items-center vh-75 mt-5">
     <div class="text-center mb-4">
-      <h5 class="fw-bold text-uppercase  position-relative d-inline-block" style="color: #7a0f16;">
+      <h5 class="fw-bold text-uppercase  position-relative d-inline-block" style="color: #1F2937;">
         <i class="bi bi-people-fill me-2 fs-3"></i>
         Iniciar sesión
         <span class="underline-effect"></span>

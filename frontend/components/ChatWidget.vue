@@ -21,7 +21,7 @@ style="bottom: 90px; right: 20px; width: 320px; height: 450px; z-index: 9999; an
 </div>
 </div>
 <div v-else class="d-flex align-items-start">
-<div class="p-2 px-3 bg-light border rounded-p111 w-75">
+<div class="p-2 px-3 rounded-p111 w-75" style="background-color: #F4F6F8; border: 1px solid #D1D5DB;">
 {{ msg.text}}
 </div>
 </div>

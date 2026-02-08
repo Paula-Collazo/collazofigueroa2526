@@ -1,7 +1,7 @@
 <template>
-    <div class="container-fluid my-1 p-3 border rounded-3 shadow-sm bg-light">
+    <div class="container-fluid my-1 p-3 border rounded-3 shadow-sm" style="background-color: #F4F6F8;">
         <!-- Título principal -->
-        <h3 class="text-center mt-2 mb-3 d-flex align-items-center justify-content-center" style="color: #7a0f16;">
+        <h3 class="text-center mt-2 mb-3 d-flex align-items-center justify-content-center" style="color: #1F2937;">
             <i class="bi bi-person-gear me-2"></i>Lista de Citas
         </h3>
 
@@ -353,7 +353,7 @@ function formatearFecha(fechaISO) {
 </script>
 <style scoped>
 .table-primary th {
-  background-color:   #f59191 !important;
-  color: black !important;
+  background-color: #2563EB !important;
+  color: white !important;
 }
 </style>

@@ -7,7 +7,7 @@
     </div>
 
 <div v-else>
-    <table class="table">
+    <table class="table table-primary">
         <thead>
             <tr>
                 <th>Producto</th>
@@ -184,4 +184,9 @@ const iniciarPago = async () => {
 }
 
 </script>
-<style scoped> </style>
+<style scoped>
+.table-primary th {
+  background-color: #2563EB !important;
+  color: white !important;
+}
+</style>

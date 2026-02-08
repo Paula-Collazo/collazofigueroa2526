@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-dark bg-danger sticky-top navbar-expand-lg">
+  <nav class="navbar navbar-dark sticky-top navbar-expand-lg" style="background-color: #1F2A44;">
 
     <div class="container-fluid">
       <!-- Marca o logo -->
@@ -68,7 +68,7 @@
 
         <!-- Badge con número de productos -->
           <span
-          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" 
+          class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-primary" 
           v-if="cesta.totalItems > 0"
           >
           {{ cesta.totalItems }}
@@ -80,13 +80,13 @@
         <div class="dropdown ms-auto">
           <button
           class="btn btn-primary dropdown-toggle d-flex align-items-center gap-2"
-          style="background-color: #b02a37; border-color: white;"
+          style="background-color: #1F2A44; border-color: white;"
           type="button"
           data-bs-toggle="dropdown"
           aria-expanded="false"
           >
           <p class=" mb-0 ">{{userName}}</p>
-          <i class="bi bi-person fs-4" style="background-color: #b02a37;"></i>
+          <i class="bi bi-person fs-4" style="background-color: #1F2A44;"></i>
           </button>
           <ul class="dropdown-menu dropdown-menu-end">
             <!-- Mostra “Acceso/Registro” se NON hai usuario logueado -->
@@ -188,6 +188,6 @@ function logout() {
 }
 
 .navbar.bg-danger {
-  background-color:  #b02a37!important; /* #e57373  */
+  background-color:  #1F2A44!important; /* azul marino */
 }
 </style>

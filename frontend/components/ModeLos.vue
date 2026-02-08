@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid my-4 p-4 border rounded-4 shadow-lg bg-white">
-        <h4 class="text-center mb-4 fw-semibold border-bottom pb-2 mt-2" style="color: #7a0f16;">
+        <h4 class="text-center mb-4 fw-semibold border-bottom pb-2 mt-2" style="color: #1F2937;">
             <i class="bi bi-car-front me-2"></i>Registro de Vehículos
         </h4>
 
@@ -120,7 +120,7 @@
                 </div>
             </div>
 
-            <h4 class="text-center mb-4 fw-semibold border-bottom pb-2 mt-2" style="color: #7a0f16;">
+            <h4 class="text-center mb-4 fw-semibold border-bottom pb-2 mt-2" style="color: #1F2937;">
                 <i class="bi bi-person me-2"></i>Cliente Ubicación
             </h4>
             <!-- FILA: Ubicación -->
@@ -202,8 +202,8 @@
             </div>
         </form>
     <div class="table-responsive">
-      <h4 class="text-center mb-1" style="color: #7a0f16;">Listado de Modelos</h4>
-     <table class="table table-bordered table-striped table-sm table-hover table-sm align-middle">
+      <h4 class="text-center mb-1" style="color: #1F2937;">Listado de Modelos</h4>
+     <table class="table table-bordered table-striped table-sm table-hover table-sm align-middle table-primary">
         <thead>
           <tr class="table-primary text-center">
             <th>Matrícula</th>
@@ -573,3 +573,10 @@ const imprimirPDF = () => {
     
 };
 </script>
+
+<style scoped>
+.table-primary th {
+  background-color: #2563EB !important;
+  color: white !important;
+}
+</style>
