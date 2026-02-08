@@ -27,7 +27,7 @@ export const esAdmin = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-    return response.data.esAdmin; // true o false
+    return response.data; // true o false
   } catch (error) {
     console.error("Error en esAdmin:", error);
     return false;

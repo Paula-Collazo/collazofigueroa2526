@@ -141,7 +141,8 @@ onMounted(async () => {
   const token = sessionStorage.getItem('token')
   if (!token) {
     isLogueado.value = false
-    isAdmin.value = await esAdmin()
+    const response = await esAdmin()
+    isAdmin.value = response.esAdmin
     isUsuario.value = false
     userName.value = ''
     return
@@ -149,7 +150,8 @@ onMounted(async () => {
 
   try {
     // Decidir si es admin usando la función del frontend
-    isAdmin.value = await esAdmin()
+    const response = await esAdmin()
+    isAdmin.value = response.esAdmin
     isUsuario.value = !isAdmin.value
     isLogueado.value = true
     userName.value = sessionStorage.getItem('userName') || ''

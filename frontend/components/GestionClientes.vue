@@ -408,7 +408,8 @@ const isLogueado = ref(false);
 
 // Zona Cargar clientes Al Montar el componente
 onMounted(async () => {
-  isAdmin.value = await esAdmin();
+  const response = await esAdmin()
+  isAdmin.value = response.esAdmin
   const token = sessionStorage.getItem('token')
   if (!token) {
     isLogueado.value = false;

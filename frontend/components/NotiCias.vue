@@ -72,7 +72,8 @@ let isAdmin = ref(false);
 
 
 onMounted(async () => {
-isAdmin.value = await esAdmin();
+const response = await esAdmin()
+isAdmin.value = response.esAdmin
   const lista = await getNoticias();
   // Ordenar de más nueva a más vieja
   noticias.value = lista.sort(

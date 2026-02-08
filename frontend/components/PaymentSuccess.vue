@@ -31,7 +31,14 @@
 import { jsPDF } from "jspdf";
 import { useCestaStore } from "../store/cesta.js";
 import logo from "@/assets/Paula.png";
-import { addFactura } from "../api/facturas.js";
+import { addFactura, obtenerFacturaPorDni } from "../api/facturas.js";
+import { setCochesToVendido } from "../api/articulos.js";
+import { esAdmin } from "../api/authApi.js";
+import { ref } from "vue";
+
+const ultimaFactura = ref(null)
+const cargando = ref(null)
+
 
 export default {
   data() {
@@ -41,6 +48,28 @@ export default {
       numeroFactura: ""
     };
   },
+
+  async mounted(){
+    try{
+        const dniUsuario = await esAdmin().dni
+
+        if (dniUsuario) {
+          const facturas = await obtenerFacturaPorDni(dniUsuario)
+
+          if (facturas && facturas.length > 0) {
+              ultimaFactura.value = facturas[-1]
+              setCochesToVendido(ultimaFactura.value.items.map(item => item.productoId))
+          }
+          
+        }
+    }catch(error){
+      console.error('Error al cargar la última factra:', error)
+    } finally {
+        cargando.value = false
+    }
+      
+  },
+
 
   created() {
     const cartStore = useCestaStore();
@@ -77,6 +106,8 @@ export default {
 
   methods: {
     async guardarFactura() {
+
+      //TODO añadir campo dni cliente
       try {
         const factura = {
           numeroFactura: this.numeroFactura,

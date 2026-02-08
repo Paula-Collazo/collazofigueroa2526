@@ -27,7 +27,7 @@ router.get("/citas-taller", verificarToken, soloAdmin, (req, res) => {
 });
 
 router.get("/check-admin", verificarToken,(req, res) => {
-  res.json({ esAdmin: req.user?.tipo === "admin" });
+  res.json({ esAdmin: req.user?.tipo === "admin", dni: req.user.dni });
 });
 
 export default router;

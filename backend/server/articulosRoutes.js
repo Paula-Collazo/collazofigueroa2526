@@ -95,6 +95,36 @@ router.get("/buscar", async (req, res) => {
   }
 });
 
+router.put("/vendido", async (req, res) => {
+  try{
+    const { ids } = req.body;
+
+    if(!ids || !Array.isArray(ids) || ids.length === 0){
+        return res.status(400).json({ error: "Se requiero un array de IDs "});
+    }
+
+    // Actualizar todos los vehiculos con los IDs proporcionados 
+    const resultado = await Articulo.updateMany( //actualiza y no para con el primero que cumple la condición si no que actualiza todos los que cumplen la condición
+      {_id: { $in: ids }}, //_id (es cel id del articulo actuaL funciona como un for each) $in si el id esta dentro del array de ids
+      { $set: { estado:"vendido"}} //si esta le cambio el estado a vendido
+    );
+
+    res.json({
+      mensaje: `${resultado.modifiedCount} vehículo(s) marcado(s) como vendido(s)`,
+      modificados: resultado.modifiedCount
+    });
+  } catch (err) {
+    console.error("Error al actualizar el estado del vehículo", err);
+    res.status(500).json({ error: err.message });
+    
+  }
+});
+
+
+
+
+
+
 // otras rutas PUT, DELETE, GET /:id igual
 
 export default router;

@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+//TODO hacer que guarde el dni del cliente que hace la compra 
+
 const FacturaSchema = new mongoose.Schema({
   fecha: {
     type: Date,
