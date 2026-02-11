@@ -79,6 +79,7 @@ export default {
 
 
   created() {
+     const yaGuardada = sessionStorage.getItem("facturaGuardada");
     const cartStore = useCestaStore();
     this.numeroFactura = `FAC-${Date.now()}`
     // Obtener carrito
@@ -108,7 +109,11 @@ export default {
     this.numeroFactura = `FAC-${Date.now()}`;
 
     // ✅ GUARDAR FACTURA AL ENTRAR
+    if(this.cartItems.length>0 && !yaGuardada){
     this.guardarFactura();
+       sessionStorage.setItem("facturaGuardada", "true");
+
+    }
   },
 
   methods: {
