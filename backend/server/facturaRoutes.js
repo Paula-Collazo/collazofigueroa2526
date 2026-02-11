@@ -21,9 +21,12 @@ router.post("/", async (req, res) => {
 router.get("/:dni", async (req, res) => {
   try{
   
-  const dni = req.params;
-  const facturas= Factura.find({dni})
-
+  const dni = req.params.dni;
+  console.log(dni);
+  
+  const facturas=  await Factura.find({dni})
+  console.log(facturas);
+    
   if ( !facturas || facturas.length === 0) {
       res.status(404).json({ error: "No se encontro ninguna factura" })
   }

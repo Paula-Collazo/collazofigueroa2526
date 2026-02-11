@@ -36,8 +36,7 @@ import { setCochesToVendido } from "../api/articulos.js";
 import { esAdmin } from "../api/authApi.js";
 import { ref } from "vue";
 
-const ultimaFactura = ref(null)
-const cargando = ref(null)
+
 
 
 export default {
@@ -45,30 +44,38 @@ export default {
     return {
       cartItems: [],
       totalPrice: 0,
-      numeroFactura: ""
+      numeroFactura: "",
+      ultimaFactura: null,
+      cargando: false
     };
   },
 
-  async mounted(){
-    try{
-        const dniUsuario = await esAdmin().dni
+  async mounted() {
+  try {
+    const user = await esAdmin();
+    const dniUsuario = user?.dni;
 
-        if (dniUsuario) {
-          const facturas = await obtenerFacturaPorDni(dniUsuario)
+    if (dniUsuario) {
+      console.log(dniUsuario);
 
-          if (facturas && facturas.length > 0) {
-              ultimaFactura.value = facturas[-1]
-              setCochesToVendido(ultimaFactura.value.items.map(item => item.productoId))
-          }
-          
-        }
-    }catch(error){
-      console.error('Error al cargar la última factra:', error)
-    } finally {
-        cargando.value = false
+      const facturas = await obtenerFacturaPorDni(dniUsuario);
+    
+
+      if (facturas && facturas.length > 0) {
+        this.ultimaFactura = facturas[facturas.length - 1];
+          console.log(this.ultimaFactura.productos.map(item => item.productoId));
+
+        await setCochesToVendido(
+          this.ultimaFactura.productos.map(item => item.productoId)
+        );
+      }
     }
-      
-  },
+  } catch (error) {
+    console.error('Error al cargar la última factura:', error);
+  } finally {
+    this.cargando = false;
+  }
+},
 
 
   created() {
@@ -107,7 +114,6 @@ export default {
   methods: {
     async guardarFactura() {
 
-      //TODO añadir campo dni cliente
       try {
         const factura = {
           numeroFactura: this.numeroFactura,
@@ -119,6 +125,7 @@ export default {
             fecha: new Date(),
           })),
           total: this.totalPrice,
+          dni: sessionStorage.getItem("dni")
         };
 
         await addFactura(factura);

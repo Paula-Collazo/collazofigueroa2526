@@ -36,7 +36,6 @@ export async function deleteArticulo(id) {
 }
 
 export async function setCochesToVendido (ids) {
-  const res = await axios.put(`${API_URL}/vendido`, ids, {
-  })
+  const res = await axios.put(`${API_URL}/vendido`, {ids})
   return res.data;
 }
