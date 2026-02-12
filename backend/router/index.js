@@ -8,6 +8,7 @@ import ModeLos from "../../frontend/components/ModeLos.vue";
 import CitasTaller from "../../frontend/components/CitasTaller.vue";
 import TablaLogin from "../../frontend/components/TablaLogin.vue";
 import VenTas from "../../frontend/components/VenTas.vue";
+import OneCard from "../../frontend/components/OneCard.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import ConTacto from "../../frontend/components/ConTacto.vue";
 import BusCar from "../../frontend/components/BusCar.vue";
@@ -68,6 +69,11 @@ const routes = [
         component: VenTas
     },
     {
+        path: '/ventas/:id',
+        name: 'OneCard',
+        component: OneCard
+    },
+    {
         path: '/contacto',
         name: 'Contacto',
         component: ConTacto
@@ -91,7 +97,8 @@ const routes = [
         path: '/PaymentCancel',
         name: 'PaymentCancel',
         component: PaymentCancel
-    }
+    },
+    
     
     
     

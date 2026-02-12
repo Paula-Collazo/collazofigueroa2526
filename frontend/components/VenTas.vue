@@ -41,9 +41,11 @@
 </template>
 <script setup>
 import { ref, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import { getArticulos } from "@/api/articulos.js";
 import { useCestaStore } from "../store/cesta";
 
+const router = useRouter();
 const cestaStore = useCestaStore();
 
 const vehiculos = ref([]);
@@ -51,8 +53,9 @@ const vehiculos = ref([]);
 onMounted(async () => {
     vehiculos.value = await getArticulos();
 });
+
 function locate(id){
-    window.location.href=`/ventas/${id}`
+    router.push(`/ventas/${id}`);
 }
 
 const urlImagen = (ruta) => {

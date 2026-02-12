@@ -128,11 +128,11 @@ router.get("/:id", async (req, res) => {
     
     const id = req.params.id;
     
-    const coche=  await Articulo.findById({id})
+    const coche = await Articulo.findById(id)
 
       
     if (!coche) {
-        res.status(404).json({ error: "No se encontro ningun coche" })
+        return res.status(404).json({ error: "No se encontro ningun coche" })
     }
   
     return res.status(200).json(coche)
