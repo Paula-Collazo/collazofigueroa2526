@@ -274,6 +274,32 @@
           <button type="submit" class="btn btn-primary px-4" :disabled="!nuevoCliente.lopd">
             {{ editando ? "Modificar" : "Guardar" }}
           </button>
+          
+          <!-- ============================================
+          BOTÓN DE IMPRIMIR (COMENTADO)
+          ============================================
+          <button type="button" class="btn btn-dark ms-2" @click="imprimirDatosCliente">
+            <i class="bi bi-printer"></i> Imprimir
+          </button>
+          ============================================ -->
+          
+          <!-- ============================================
+          BOTÓN DE SUBIR FOTO (COMENTADO)
+          ============================================
+          <div class="ms-2">
+            <label for="inputFoto" class="btn btn-secondary mb-0">
+              <i class="bi bi-upload"></i> Subir Foto
+            </label>
+            <input 
+              type="file" 
+              id="inputFoto" 
+              accept="image/*" 
+              class="d-none"
+              @change="subirFoto"
+            />
+          </div>
+          ============================================ -->
+          
         </div>
 
         <!-- Checkbox al final -->
@@ -644,6 +670,109 @@ const guardarCliente = async () => {
     });
   }
 };
+
+/* ============================================
+   FUNCIÓN IMPRIMIR DATOS DEL CLIENTE (COMENTADA)
+   ============================================
+   
+// Función para imprimir los datos del cliente actual en PDF
+const imprimirDatosCliente = () => {
+  // Importar jsPDF: import { jsPDF } from "jspdf"
+  const doc = new jsPDF();
+  
+  // Título del documento
+  doc.setFontSize(18);
+  doc.text("Ficha de Cliente", 105, 20, { align: "center" });
+  
+  // Línea decorativa
+  doc.setLineWidth(0.5);
+  doc.line(20, 25, 190, 25);
+  
+  // Datos del cliente
+  doc.setFontSize(12);
+  let y = 40;
+  
+  doc.text(`DNI: ${nuevoCliente.value.dni || 'N/A'}`, 20, y);
+  y += 10;
+  doc.text(`Nombre: ${nuevoCliente.value.nombre || 'N/A'}`, 20, y);
+  y += 10;
+  doc.text(`Apellidos: ${nuevoCliente.value.apellidos || 'N/A'}`, 20, y);
+  y += 10;
+  doc.text(`Email: ${nuevoCliente.value.email || 'N/A'}`, 20, y);
+  y += 10;
+  doc.text(`Móvil: ${nuevoCliente.value.movil || 'N/A'}`, 20, y);
+  y += 10;
+  doc.text(`Dirección: ${nuevoCliente.value.direccion || 'N/A'}`, 20, y);
+  y += 10;
+  doc.text(`Provincia: ${nuevoCliente.value.provincia || 'N/A'}`, 20, y);
+  y += 10;
+  doc.text(`Municipio: ${nuevoCliente.value.municipio || 'N/A'}`, 20, y);
+  y += 10;
+  doc.text(`Tipo de Cliente: ${nuevoCliente.value.tipoCliente || 'N/A'}`, 20, y);
+  y += 10;
+  doc.text(`Fecha de Alta: ${nuevoCliente.value.fecha_alta || 'N/A'}`, 20, y);
+  
+  // Guardar PDF
+  const fecha = new Date().toISOString().split("T")[0];
+  doc.save(`cliente_${nuevoCliente.value.dni || 'sin_dni'}_${fecha}.pdf`);
+};
+
+============================================ */
+
+/* ============================================
+   FUNCIÓN SUBIR FOTO DEL CLIENTE (COMENTADA)
+   ============================================
+
+// Variable reactiva para almacenar la foto
+// const fotoCliente = ref(null);
+// const previewFoto = ref('');
+
+// Función para manejar la subida de foto
+const subirFoto = (event) => {
+  const archivo = event.target.files[0];
+  
+  // Validar que sea una imagen
+  if (!archivo || !archivo.type.startsWith('image/')) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Archivo no válido',
+      text: 'Por favor, seleccione una imagen válida (JPG, PNG, GIF)',
+      showConfirmButton: true
+    });
+    return;
+  }
+  
+  // Validar tamaño (máximo 5MB)
+  const maxSize = 5 * 1024 * 1024; // 5MB en bytes
+  if (archivo.size > maxSize) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Archivo demasiado grande',
+      text: 'El tamaño máximo permitido es 5MB',
+      showConfirmButton: true
+    });
+    return;
+  }
+  
+  // Guardar el archivo
+  fotoCliente.value = archivo;
+  
+  // Crear preview de la imagen
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    previewFoto.value = e.target.result;
+  };
+  reader.readAsDataURL(archivo);
+  
+  Swal.fire({
+    icon: 'success',
+    title: 'Foto cargada correctamente',
+    showConfirmButton: false,
+    timer: 1500
+  });
+};
+
+============================================ */
 
 // Funcion Eliminar Cliente con patch (histórico a false)
 const eliminarCliente = async (movil) => {
