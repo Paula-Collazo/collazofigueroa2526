@@ -37,10 +37,10 @@
           <tr>
             <td>
               <span>
-                {{ isExpanded[noticia.id] ? noticia.contenido : noticia.contenido.slice(0, 200) + '...' }}
+                {{ isExpanded[noticia.id] ? noticia.contenido : (noticia.contenido.length > 0 ? noticia.contenido.slice(0, 200) + '...' : noticia.contenido) }}
               </span>
               <div class="float-end">
-                <a href="#" @click.prevent="toggleExpand(noticia.id)" class="text-decoration-none me-3">
+                <a v-if="noticia.contenido.length > 200" href="#" @click.prevent="toggleExpand(noticia.id)" class="text-decoration-none me-3">
                   {{ isExpanded[noticia.id] ? 'Mostrar menos...' : 'Seguir leyendo...' }}
                 </a>
                 <button @click="eliminarNoticia(noticia.id)" class="btn btn-danger btn-sm me-2">

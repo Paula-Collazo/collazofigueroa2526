@@ -60,7 +60,7 @@
                             <i class="bi bi-lock me-1"></i> No disponible
                         </span>
                         <button
-                            class="btn badge btn-sm btn-info ms-2"
+                            class="btn badge btn-sm btn-dark ms-2"
                             @click.stop="imprimirFichaVehiculo(car)"
                             title="Imprimir ficha del vehículo">
                             <i class="bi bi-printer me-1"></i> Imprimir
@@ -168,63 +168,194 @@ const imprimirFichaVehiculo = (vehiculo) => {
     // PASO 1: Creamos un documento PDF en blanco, tamaño A4 vertical
     const doc = new jsPDF();
 
-    // PASO 2: Añadimos el título principal en la parte superior del PDF
-    doc.setFontSize(18); // Tamaño grande para el título
-    doc.setFont(undefined, 'bold'); // Letra en negrita
-    doc.text("Ficha del Vehículo", 105, 15, { align: 'center' }); // Centrado horizontalmente
+    // PASO 2: Diseño Premium - Cabecera compacta
+    doc.setFillColor(20, 33, 61);
+    doc.rect(0, 0, 210, 28, 'F');
+    doc.setFillColor(41, 128, 185);
+    doc.rect(0, 23, 210, 5, 'F');
 
-    // Añadimos la matrícula justo debajo del título
-    doc.setFontSize(14);
-    doc.text(`Matrícula: ${vehiculo.matricula || 'Sin matrícula'}`, 105, 23, { align: 'center' });
+    // Título principal compacto
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(18);
+    doc.setFont('helvetica', 'bold');
+    doc.text('FICHA DEL VEHICULO', 105, 12, { align: 'center' });
 
-    // PASO 3: Preparamos todos los datos del vehículo en formato tabla
-    // Cada fila es un array de 2 elementos: ["Nombre del campo", "Valor"]
-    const datosVehiculo = [
-        ['Tipo de vehículo', vehiculo.tipo || '-'],
+    // Subtítulo marca y modelo
+    doc.setFontSize(13);
+    doc.setFont('helvetica', 'normal');
+    doc.text(`${vehiculo.marca || ''} ${vehiculo.modelo || ''}`.toUpperCase(), 105, 19, { align: 'center' });
+
+    // Badge de matrícula compacto
+    doc.setFillColor(255, 255, 255);
+    doc.roundedRect(80, 24, 50, 5, 1, 1, 'F');
+    doc.setTextColor(20, 33, 61);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'bold');
+    doc.text(vehiculo.matricula || 'SIN MATRICULA', 105, 27.5, { align: 'center' });
+
+    doc.setTextColor(44, 62, 80);
+
+    // PASO 3: Organizar datos en secciones compactas
+    let yPos = 34;
+
+    // Combinar Información Principal + Especificaciones
+    doc.setFillColor(236, 240, 241);
+    doc.rect(15, yPos, 180, 6, 'F');
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(41, 128, 185);
+    doc.text('INFORMACION DEL VEHICULO', 20, yPos + 4);
+    yPos += 7;
+
+    const seccion1 = [
+        ['Tipo', vehiculo.tipo || '-'],
         ['Marca', vehiculo.marca || '-'],
         ['Modelo', vehiculo.modelo || '-'],
         ['Año', vehiculo.anio ? String(vehiculo.anio) : '-'],
-        ['Kilómetros', vehiculo.kilometros ? `${vehiculo.kilometros.toLocaleString('es-ES')} km` : '-'],
-        ['Precio', vehiculo.precio ? `${vehiculo.precio.toLocaleString('es-ES')} €` : '-'],
+        ['Estado', vehiculo.estado?.toUpperCase() || '-'],
+        ['Kilometros', vehiculo.kilometros ? `${vehiculo.kilometros.toLocaleString('es-ES')} km` : '-'],
         ['Combustible', vehiculo.combustible || '-'],
-        ['Transmisión', vehiculo.transmision || '-'],
-        ['Potencia', vehiculo.potencia_cv ? `${vehiculo.potencia_cv} CV` : '-'],
-        ['Estado', vehiculo.estado || '-'],
-        ['Provincia', vehiculo.ubicacion?.provincia || '-'],
-        ['Ciudad', vehiculo.ubicacion?.ciudad || '-'],
-        ['Contacto - Nombre', vehiculo.contacto?.nombre || '-'],
-        ['Contacto - Teléfono', vehiculo.contacto?.telefono || '-'],
-        ['Contacto - Email', vehiculo.contacto?.email || '-'],
-        ['Fecha de publicación', vehiculo.fecha_publicacion ? new Date(vehiculo.fecha_publicacion).toLocaleDateString('es-ES') : '-'],
-        ['Descripción', vehiculo.descripcion || 'Sin descripción']
+        ['Transmision', vehiculo.transmision || '-'],
+        ['Potencia', vehiculo.potencia_cv ? `${vehiculo.potencia_cv} CV` : '-']
     ];
 
-    // PASO 4: Generamos la tabla automáticamente en el PDF
-    // autoTable es una función que dibuja tablas profesionales sin tener que hacerlo manualmente
-    // IMPORTANTE: Se llama como autoTable(doc, opciones) pasando el documento como primer parámetro
-    autoTable(doc, {
-        head: [['Campo', 'Valor']], // Cabecera de la tabla (primera fila en negrita)
-        body: datosVehiculo, // Todas las filas con los datos del vehículo
-        startY: 30, // Empezamos a dibujar la tabla 30mm desde arriba (para dejar espacio al título)
-        styles: { 
-            fontSize: 10, // Tamaño de letra medio
-            cellPadding: 3, // Espacio dentro de cada celda para que no quede apretado
-        },
-        headStyles: { 
-            fillColor: [37, 99, 235], // Color azul para la cabecera (RGB)
-            textColor: [255, 255, 255], // Texto blanco en la cabecera
-            fontStyle: 'bold' // Letra en negrita
+    const seccion2Data = [
+        ['Precio', vehiculo.precio ? `${vehiculo.precio.toLocaleString('es-ES')} €` : '-']
+    ];
+
+    const seccion3Data = [
+        ['Provincia', vehiculo.ubicacion?.provincia || '-'],
+        ['Ciudad', vehiculo.ubicacion?.ciudad || '-'],
+        ['Nombre', vehiculo.contacto?.nombre || '-'],
+        ['Telefono', vehiculo.contacto?.telefono || '-'],
+        ['Email', vehiculo.contacto?.email || '-']
+    ];
+
+    const seccion4Data = [
+        ['Fecha publicacion', vehiculo.fecha_publicacion ? new Date(vehiculo.fecha_publicacion).toLocaleDateString('es-ES') : '-'],
+        ['Descripcion', vehiculo.descripcion || 'Sin descripcion adicional']
+    ];
+
+    // PASO 4: Renderizar todas las secciones de forma compacta
+    const estiloSeccion = {
+        startY: yPos,
+        theme: 'plain',
+        styles: {
+            fontSize: 8,
+            cellPadding: 2,
+            textColor: [44, 62, 80],
+            lineColor: [189, 195, 199],
+            lineWidth: 0.1
         },
         columnStyles: {
-            0: { cellWidth: 60, fontStyle: 'bold' }, // Primera columna (Campo): 60mm de ancho, negrita
-            1: { cellWidth: 120 } // Segunda columna (Valor): 120mm de ancho
+            0: { 
+                cellWidth: 45,
+                fontStyle: 'bold',
+                textColor: [52, 73, 94]
+            },
+            1: { 
+                cellWidth: 135,
+                textColor: [44, 62, 80]
+            }
         },
-        alternateRowStyles: { 
-            fillColor: [245, 247, 250] // Color gris claro en filas alternas para mejor lectura
+        margin: { left: 15, right: 15 },
+        didParseCell: function(data) {
+            if (data.row.index % 2 === 0) {
+                data.cell.styles.fillColor = [255, 255, 255];
+            } else {
+                data.cell.styles.fillColor = [249, 250, 251];
+            }
+        }
+    };
+
+    // Renderizar Sección 1 (Info + Especificaciones)
+    autoTable(doc, { ...estiloSeccion, body: seccion1 });
+
+    // Sección PRECIO (destacada)
+    yPos = doc.lastAutoTable.finalY + 3;
+    doc.setFillColor(46, 204, 113);
+    doc.rect(15, yPos, 180, 6, 'F');
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(255, 255, 255);
+    doc.text('PRECIO', 20, yPos + 4);
+    yPos += 7;
+
+    autoTable(doc, { 
+        ...estiloSeccion, 
+        startY: yPos, 
+        body: seccion2Data,
+        columnStyles: {
+            0: { 
+                cellWidth: 45,
+                fontStyle: 'bold',
+                textColor: [46, 204, 113]
+            },
+            1: { 
+                cellWidth: 135,
+                fontStyle: 'bold',
+                fontSize: 10,
+                textColor: [46, 204, 113]
+            }
         }
     });
 
-    // PASO 5: Generamos el nombre del archivo y descargamos el PDF
+    // Sección UBICACIÓN Y CONTACTO combinada
+    yPos = doc.lastAutoTable.finalY + 3;
+    doc.setFillColor(236, 240, 241);
+    doc.rect(15, yPos, 180, 6, 'F');
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(41, 128, 185);
+    doc.text('UBICACION Y CONTACTO', 20, yPos + 4);
+    yPos += 7;
+
+    autoTable(doc, { ...estiloSeccion, startY: yPos, body: seccion3Data });
+
+    // Sección DETALLES ADICIONALES
+    yPos = doc.lastAutoTable.finalY + 3;
+    doc.setFillColor(236, 240, 241);
+    doc.rect(15, yPos, 180, 6, 'F');
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'bold');
+    doc.setTextColor(41, 128, 185);
+    doc.text('DETALLES ADICIONALES', 20, yPos + 4);
+    yPos += 7;
+
+    autoTable(doc, { ...estiloSeccion, startY: yPos, body: seccion4Data });
+
+    // PASO 5: Pie de página compacto
+    const pageCount = doc.internal.getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+        doc.setPage(i);
+        
+        // Barra inferior compacta
+        doc.setFillColor(20, 33, 61);
+        doc.rect(0, 290, 210, 7, 'F');
+        
+        // Información del pie en blanco
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(7);
+        doc.setFont('helvetica', 'normal');
+        
+        const fechaGeneracion = new Date().toLocaleDateString('es-ES', { 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+        
+        doc.text(`Generado: ${fechaGeneracion}`, 20, 294.5);
+        doc.text(`Pagina ${i}/${pageCount}`, 175, 294.5);
+        
+        // Línea decorativa dorada encima del pie
+        doc.setDrawColor(241, 196, 15);
+        doc.setLineWidth(0.5);
+        doc.line(15, 288, 195, 288);
+    }
+
+    // PASO 6: Generamos el nombre del archivo y descargamos el PDF
     const fecha = new Date().toISOString().split('T')[0]; // Fecha actual en formato AAAA-MM-DD
     const matriculaLimpia = (vehiculo.matricula || 'SIN-MATRICULA').replace(/\s+/g, '_'); // Quitamos espacios
     const nombreArchivo = `ficha_${matriculaLimpia}_${fecha}.pdf`;
