@@ -200,6 +200,19 @@
                     <button @click="imprimirPDF" class="btn btn-secondary rounded border shadow-none px-4" type="submit"><i class="bi bi-printer"></i>Imprimir</button>
                 </div>
             </div>
+            <!-- FILA: Imprimir por marca -->
+            <div class="d-flex align-items-center justify-content-end gap-2 mt-3">
+                <input
+                    type="text"
+                    v-model="marcaFiltro"
+                    class="form-control rounded-0 shadow-none border"
+                    placeholder="Marca..."
+                    style="width: 150px;"
+                />
+                <button @click="imprimirPDFporMarca" class="btn btn-info rounded border shadow-none px-4 text-white" type="button">
+                    <i class="bi bi-printer"></i> Imprimir por Marca
+                </button>
+            </div>
         </form>
     <div class="table-responsive">
       <h4 class="text-center mb-1" style="color: #1F2937;">Listado de Modelos</h4>
@@ -519,6 +532,63 @@ const guardarVehiculo = async () => {
     } catch (error) {
         console.error("Error al guardar:", error);
     }
+};
+
+const marcaFiltro = ref('');
+
+const imprimirPDFporMarca = () => {
+    const marca = marcaFiltro.value.trim();
+    if (!marca) {
+        Swal.fire({ icon: 'warning', title: 'Introduce una marca', text: 'Escribe la marca por la que filtrar.' });
+        return;
+    }
+
+    const filtrados = modelos.value.filter(m =>
+        m.marca.toLowerCase().includes(marca.toLowerCase())
+    );
+
+    if (filtrados.length === 0) {
+        Swal.fire({ icon: 'info', title: 'Sin resultados', text: `No hay vehículos de la marca "${marca}".` });
+        return;
+    }
+
+    const doc = new jsPDF();
+    const fecha = new Date().toISOString().split('T')[0];
+
+    doc.setFontSize(16);
+    doc.text(`Vehículos - Marca: ${marca.charAt(0).toUpperCase() + marca.slice(1)}`, 60, 20);
+    doc.setFontSize(10);
+    doc.text(`Fecha: ${fecha} | Total: ${filtrados.length}`, 75, 27);
+
+    let yPosition = 37;
+    const columnX = [15, 35, 60, 90, 130, 165];
+    const headers = ['Matrícula', 'Marca', 'Modelo', 'Estado', 'Combustible', 'Precio'];
+
+    doc.setFont(undefined, 'bold');
+    headers.forEach((header, i) => {
+        doc.text(header, columnX[i], yPosition);
+    });
+
+    yPosition += 8;
+    doc.setFont(undefined, 'normal');
+    doc.setFontSize(9);
+
+    filtrados.forEach(modelo => {
+        if (yPosition > 280) {
+            doc.addPage();
+            yPosition = 20;
+        }
+        doc.text(String(modelo.matricula || ''), columnX[0], yPosition);
+        doc.text(String(modelo.marca || ''), columnX[1], yPosition);
+        doc.text(String(modelo.modelo || ''), columnX[2], yPosition);
+        doc.text(String(modelo.estado || ''), columnX[3], yPosition);
+        doc.text(String(modelo.combustible || ''), columnX[4], yPosition);
+        doc.text(`${modelo.precio || 0} €`, columnX[5], yPosition);
+        yPosition += 7;
+    });
+
+    const hora = new Date().toLocaleTimeString().split(' ')[0];
+    doc.save(`vehiculos_${marca.toLowerCase()}_${fecha}_${hora.replace(/:/g, '-')}.pdf`);
 };
 
 const archivo = ref(null);
