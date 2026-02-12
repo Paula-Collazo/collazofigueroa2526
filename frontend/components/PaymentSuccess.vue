@@ -46,7 +46,10 @@ export default {
       totalPrice: 0,
       numeroFactura: "",
       ultimaFactura: null,
-      cargando: false
+      cargando: false,
+      montoDescuento: 0,
+      gastosEnvio: 0,
+      subtotal: 0
     };
   },
 
@@ -97,18 +100,37 @@ export default {
       }
     }
 
-    // Calcular total
-    this.totalPrice = this.cartItems.reduce(
-      (total, item) =>
-        total +
-        ((item.precio_unitario || item.precio) || 0) *
-          (item.cantidad || 0),
-      0
-    );
+    // Obtener descuento, gastos de envio y subtotal desde localStorage
+    this.montoDescuento = parseFloat(localStorage.getItem('montoDescuento') || '0');
+    this.gastosEnvio = parseFloat(localStorage.getItem('gastosEnvio') || '0');
+    this.subtotal = parseFloat(localStorage.getItem('subtotal') || '0');
+    this.totalPrice = parseFloat(localStorage.getItem('precioFinal') || '0');
+
+    // Si no hay precio final guardado, calcularlo
+    if (this.totalPrice === 0) {
+      this.totalPrice = this.cartItems.reduce(
+        (total, item) =>
+          total +
+          ((item.precio_unitario || item.precio) || 0) *
+            (item.cantidad || 0),
+        0
+      );
+    }
+
+    // Si no hay subtotal, usar el total de items
+    if (this.subtotal === 0) {
+      this.subtotal = this.cartItems.reduce(
+        (total, item) =>
+          total +
+          ((item.precio_unitario || item.precio) || 0) *
+            (item.cantidad || 0),
+        0
+      );
+    }
 
     this.numeroFactura = `FAC-${Date.now()}`;
 
-    // ✅ GUARDAR FACTURA AL ENTRAR
+    // GUARDAR FACTURA AL ENTRAR
     if(this.cartItems.length>0 && !yaGuardada){
     this.guardarFactura();
        sessionStorage.setItem("facturaGuardada", "true");
@@ -193,17 +215,51 @@ export default {
         doc.text(String(item._id || item.id).substring(0, 8), cols[0], y);
         doc.text(item.nombre, cols[1], y);
         doc.text(String(item.cantidad), cols[2], y);
-        doc.text(`${precio.toFixed(2)} €`, cols[3], y);
-        doc.text(`${total.toFixed(2)} €`, cols[4], y);
+        doc.text(`${precio.toFixed(2)} EUR`, cols[3], y);
+        doc.text(`${total.toFixed(2)} EUR`, cols[4], y);
         y += 8;
       });
 
+      y += 10;
+      doc.setFont(undefined, "normal");
+      doc.setFontSize(10);
+
+      // Mostrar subtotal
+      doc.text(`Subtotal:`, 130, y);
+      doc.text(`${this.subtotal.toFixed(2)} EUR`, 195, y, { align: "right" });
+      y += 8;
+
+      // Mostrar descuento si existe
+      if (this.montoDescuento > 0) {
+        doc.setTextColor(46, 204, 113); // Verde
+        doc.text(`Descuento (10%):`, 130, y);
+        doc.text(`-${this.montoDescuento.toFixed(2)} EUR`, 195, y, { align: "right" });
+        doc.setTextColor(0, 0, 0); // Volver a negro
+        y += 8;
+      }
+
+      // Mostrar gastos de envio si existen
+      if (this.gastosEnvio > 0) {
+        doc.setTextColor(230, 126, 34); // Naranja
+        doc.text(`Gastos de envio:`, 130, y);
+        doc.text(`+${this.gastosEnvio.toFixed(2)} EUR`, 195, y, { align: "right" });
+        doc.setTextColor(0, 0, 0); // Volver a negro
+        y += 8;
+      }
+
+      // Linea separadora
+      doc.setLineWidth(0.5);
+      doc.line(130, y, 195, y);
+      y += 8;
+
+      // Total final
       doc.setFont(undefined, "bold");
       doc.setFontSize(12);
+      doc.text(`TOTAL:`, 130, y);
       doc.text(
-        `Total: ${this.totalPrice.toFixed(2)} €`,
-        165,
-        y + 5,
+        `${this.totalPrice.toFixed(2)} EUR`,
+        195,
+        y,
         { align: "right" }
       );
 

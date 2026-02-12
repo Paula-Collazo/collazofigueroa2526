@@ -182,10 +182,40 @@ const iniciarPago = async () => {
     // IMPORTANTE: Guardar el carrito en localStorage ANTES de hacer cualquier redireccionamiento
     localStorage.setItem('cesta', JSON.stringify(cesta.items))
     
+    // Guardar información de descuento y gastos de envío para la factura
+    localStorage.setItem('montoDescuento', montoDescuento.value.toString())
+    localStorage.setItem('gastosEnvio', gastosEnvio.value.toString())
+    localStorage.setItem('precioFinal', precioFinal.value.toString())
+    localStorage.setItem('subtotal', cesta.totalPrecio.toString())
+    
+    // Preparar items para Stripe con descuento aplicado proporcionalmente
+    let itemsParaStripe = []
+    
+    if (montoDescuento.value > 0) {
+        // Aplicar descuento proporcionalmente a cada producto
+        const factorDescuento = 1 - (montoDescuento.value / cesta.totalPrecio)
+        itemsParaStripe = cesta.items.map(item => ({
+            ...item,
+            nombre: item.nombre + ' (10% dto)',
+            precio: item.precio * factorDescuento
+        }))
+    } else {
+        itemsParaStripe = [...cesta.items]
+    }
+    
+    // Añadir gastos de envío como item adicional si existen
+    if (gastosEnvio.value > 0) {
+        itemsParaStripe.push({
+            nombre: 'Gastos de envio',
+            precio: gastosEnvio.value,
+            cantidad: 1
+        })
+    }
+    
     // Crear la sesión de pago en el backend
     const response = await axios.post('http://localhost:5000/crear-checkout-session', {
-        items: cesta.items,
-        amount: cesta.totalPrecio
+        items: itemsParaStripe,
+        amount: precioFinal.value
     })
 
     const session = response.data
