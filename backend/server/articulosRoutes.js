@@ -123,7 +123,24 @@ router.put("/vendido", async (req, res) => {
   }
 });
 
+router.get("/:id", async (req, res) => {
+  try{
+    
+    const id = req.params.id;
+    
+    const coche=  await Articulo.findById({id})
 
+      
+    if (!coche) {
+        res.status(404).json({ error: "No se encontro ningun coche" })
+    }
+  
+    return res.status(200).json(coche)
+  
+    } catch (error){
+       res.status(500).json({ error: "Error al obtener coche" });
+    }
+});
 
 
 

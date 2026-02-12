@@ -215,7 +215,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr v-for="modelo in modelos" :key="modelo._id" class="text-center">
+          <tr v-for="modelo in modelos" :key="modelo._id" class="text-center" >
             <td>{{ modelo.matricula }}</td>
             <td>{{ modelo.marca }}</td>
             <td>{{ modelo.modelo }}</td>
@@ -340,6 +340,8 @@ const capitalizarContacto = (campo) => {
 // Validar teléfono
 const telefonoValido = ref(true);
 const telefonoRegex = /^[67]\d{8}$/;
+
+
 
 const validarTelefono = () => {
     const telefono = vehiculo.value.contacto.telefono.trim();

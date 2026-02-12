@@ -5,6 +5,7 @@
             v-for="car in vehiculos"
             :key="car._id"
             class="col-12 col-md-6 col-lg-3"
+            v-on:click="locate(car._id) "
             >
                 <div class="card h-80 shadow-sm">
                     <img
@@ -50,6 +51,9 @@ const vehiculos = ref([]);
 onMounted(async () => {
     vehiculos.value = await getArticulos();
 });
+function locate(id){
+    window.location.href=`/ventas/${id}`
+}
 
 const urlImagen = (ruta) => {
     if (!ruta) return "/no-image.png";
