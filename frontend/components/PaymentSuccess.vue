@@ -128,6 +128,7 @@ export default {
             cantidad: item.cantidad,
             precio_unitario: item.precio_unitario || item.precio,
             fecha: new Date(),
+            cliente: sessionStorage.getItem("dni")
           })),
           total: this.totalPrice,
           dni: sessionStorage.getItem("dni")
@@ -169,6 +170,11 @@ export default {
         `Fecha: ${new Date().toLocaleDateString()}`,
         60,
         36
+      );
+      doc.text(
+        `Cliente: ${sessionStorage.getItem("dni") || "Desconocido"}`,
+        60,
+        44
       );
 
       let y = 80;
