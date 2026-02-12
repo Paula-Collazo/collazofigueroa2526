@@ -12,6 +12,9 @@
             <button class="btn btn-info text-white" @click="filtroMarca = ''">
                 <i class="bi bi-x-circle me-1"></i> Limpiar
             </button>
+            <button class="btn btn-outline-primary" @click="ordenAZ = !ordenAZ">
+                <i class="bi bi-sort-alpha-down me-1"></i> {{ ordenAZ ? 'Quitar orden' : 'A-Z' }}
+            </button>
         </div>
         <div class="row g-4">
             <div 
@@ -82,13 +85,22 @@ const cestaStore = useCestaStore();
 
 const vehiculos = ref([]);
 const filtroMarca = ref('');
+const ordenAZ = ref(false);
 
 const vehiculosFiltrados = computed(() => {
-    const marca = filtroMarca.value.trim().toLowerCase();
-    if (!marca) return vehiculos.value;
-    return vehiculos.value.filter(car =>
-        car.marca.toLowerCase().includes(marca)
-    );
+     const marca = filtroMarca.value.trim().toLowerCase();
+    let resultado = vehiculos.value;
+    if (marca) {
+        resultado = resultado.filter(car =>
+            car.marca.toLowerCase().includes(marca)
+        );
+    }
+    if (ordenAZ.value) {
+        resultado = [...resultado].sort((a, b) =>
+            a.marca.localeCompare(b.marca) || a.modelo.localeCompare(b.modelo)
+        );
+    }
+    return resultado;
 });
 
 onMounted(async () => {
