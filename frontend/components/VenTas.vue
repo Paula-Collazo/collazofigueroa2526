@@ -1,8 +1,21 @@
 <template>
     <div class="container-fluid mt-2">
+        <!-- Filtro por marca -->
+        <div class="d-flex align-items-center justify-content-end gap-2 mb-3">
+            <input
+                type="text"
+                v-model="filtroMarca"
+                class="form-control rounded-0 shadow-none border"
+                placeholder="Filtrar por marca..."
+                style="width: 200px;"
+            />
+            <button class="btn btn-info text-white" @click="filtroMarca = ''">
+                <i class="bi bi-x-circle me-1"></i> Limpiar
+            </button>
+        </div>
         <div class="row g-4">
             <div 
-            v-for="car in vehiculos"
+            v-for="car in vehiculosFiltrados"
             :key="car._id"
             class="col-12 col-md-6 col-lg-3"
             v-on:click="locate(car._id) "
@@ -57,7 +70,7 @@
 
 </template>
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import { getArticulos } from "@/api/articulos.js";
 import { useCestaStore } from "../store/cesta";
@@ -68,6 +81,15 @@ const router = useRouter();
 const cestaStore = useCestaStore();
 
 const vehiculos = ref([]);
+const filtroMarca = ref('');
+
+const vehiculosFiltrados = computed(() => {
+    const marca = filtroMarca.value.trim().toLowerCase();
+    if (!marca) return vehiculos.value;
+    return vehiculos.value.filter(car =>
+        car.marca.toLowerCase().includes(marca)
+    );
+});
 
 onMounted(async () => {
     vehiculos.value = await getArticulos();
