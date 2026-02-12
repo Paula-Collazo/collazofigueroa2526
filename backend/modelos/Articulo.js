@@ -35,6 +35,15 @@ const ArticuloSchema = new mongoose.Schema(
       default: Date.now,
     },
     imagen: { type: String, required: false },
+    
+    // Datos de reserva
+    reserva: {
+      reservado: { type: Boolean, default: false },
+      nombre: { type: String },
+      telefono: { type: String },
+      email: { type: String },
+      fecha_reserva: { type: Date },
+    },
   },
   {
     collection: "articulos",

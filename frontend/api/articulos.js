@@ -39,3 +39,18 @@ export async function setCochesToVendido (ids) {
   const res = await axios.put(`${API_URL}/vendido`, {ids})
   return res.data;
 }
+
+// Reservar un vehículo
+export async function reservarArticulo(id, datosReserva) {
+  const res = await axios.put(`${API_URL}/${id}/reservar`, datosReserva);
+  return res.data;
+}
+
+// Anular reserva (solo admin, necesita token)
+export async function anularReserva(id) {
+  const token = sessionStorage.getItem("token");
+  const res = await axios.put(`${API_URL}/${id}/anular-reserva`, {}, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return res.data;
+}

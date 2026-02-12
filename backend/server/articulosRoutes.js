@@ -5,6 +5,7 @@ import path from "path";
 import Articulo from  "../modelos/Articulo.js";
 import { fileURLToPath } from "url";
 import fs from 'fs';
+import { verificarToken, soloAdmin } from "./authController.js";
 
 // inicializar configuración de multer para manejo de archivos
 const __filename = fileURLToPath(import.meta.url);
@@ -128,7 +129,7 @@ router.get("/:id", async (req, res) => {
     
     const id = req.params.id;
     
-    const coche = await Articulo.findById(id)
+    const coche = await Articulo.findById(id);
 
       
     if (!coche) {
@@ -142,7 +143,69 @@ router.get("/:id", async (req, res) => {
     }
 });
 
+// Reservar un vehículo (cualquier usuario autenticado)
+router.put("/:id/reservar", async (req, res) => {
+  try {
+    const { nombre, telefono, email } = req.body;
 
+    if (!nombre || !telefono || !email) {
+      return res.status(400).json({ error: "Faltan datos de la reserva (nombre, telefono, email)" });
+    }
+
+    const coche = await Articulo.findById(req.params.id);
+    if (!coche) return res.status(404).json({ error: "Vehículo no encontrado" });
+
+    if (coche.reserva?.reservado) {
+      return res.status(400).json({ error: "Este vehículo ya está reservado" });
+    }
+
+    if (coche.estado === "vendido") {
+      return res.status(400).json({ error: "Este vehículo ya está vendido" });
+    }
+
+    coche.reserva = {
+      reservado: true,
+      nombre,
+      telefono,
+      email,
+      fecha_reserva: new Date(),
+    };
+    coche.estado = "reservado";
+
+    await coche.save();
+    res.json({ mensaje: "Vehículo reservado correctamente", coche });
+  } catch (err) {
+    console.error("Error al reservar:", err);
+    res.status(500).json({ error: "Error al reservar el vehículo" });
+  }
+});
+
+// Anular reserva (solo admin)
+router.put("/:id/anular-reserva", verificarToken, soloAdmin, async (req, res) => {
+  try {
+    const coche = await Articulo.findById(req.params.id);
+    if (!coche) return res.status(404).json({ error: "Vehículo no encontrado" });
+
+    if (!coche.reserva?.reservado) {
+      return res.status(400).json({ error: "Este vehículo no está reservado" });
+    }
+
+    coche.reserva = {
+      reservado: false,
+      nombre: undefined,
+      telefono: undefined,
+      email: undefined,
+      fecha_reserva: undefined,
+    };
+    coche.estado = "disponible";
+
+    await coche.save();
+    res.json({ mensaje: "Reserva anulada correctamente", coche });
+  } catch (err) {
+    console.error("Error al anular reserva:", err);
+    res.status(500).json({ error: "Error al anular la reserva" });
+  }
+});
 
 
 // otras rutas PUT, DELETE, GET /:id igual

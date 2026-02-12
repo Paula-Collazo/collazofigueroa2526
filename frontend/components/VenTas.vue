@@ -25,13 +25,24 @@
                     </div>
 
                     <div class="card-footer text-end bg-white">
-                        <span class="badge bg-primary">{{ car.estado }}</span>
+                        <span 
+                            class="badge"
+                            :class="{
+                                'bg-primary': car.estado === 'disponible',
+                                'bg-warning text-dark': car.estado === 'reservado',
+                                'bg-danger': car.estado === 'vendido'
+                            }"
+                        >{{ car.estado }}</span>
                         <button
+                            v-if="car.estado === 'disponible'"
                             class="btn badge btn-sm btn-success ms-2" 
                             @click.stop="agregarACesta(car)">
 
                             <i class="bi bi-cart3 me-1"></i> Añadir Cesta
                         </button>
+                        <span v-else class="badge bg-secondary ms-2">
+                            <i class="bi bi-lock me-1"></i> No disponible
+                        </span>
                     </div>
                 </div>
             </div>
