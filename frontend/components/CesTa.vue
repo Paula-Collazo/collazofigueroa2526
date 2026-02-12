@@ -60,6 +60,18 @@
     </div>
 
 
+    <!-- Mensajes de descuento y gastos de envío -->
+    <div class="mt-3">
+        <div v-if="montoDescuento > 0" class="alert alert-success py-2">
+            <i class="bi bi-tag-fill me-2"></i>
+            <strong>Descuento aplicado:</strong> -{{ montoDescuento.toFixed(2) }}€
+        </div>
+        <div v-if="gastosEnvio > 0" class="alert alert-warning py-2">
+            <i class="bi bi-truck me-2"></i>
+            <strong>Gastos de envío:</strong> +{{ gastosEnvio.toFixed(2) }}€
+        </div>
+    </div>
+
     <div class="d-flex justify-content-between align-items-center at-3">
         <h5>
             Total: {{ precioFinal.toFixed(2) }}€
@@ -102,6 +114,8 @@ const removeProducto = (id) => {
 }
 const codigoDescuento = ref('')
 const precioFinal = ref(0)
+const montoDescuento = ref(0) // Dinero descontado
+const gastosEnvio = ref(0) // Dinero añadido por envío
 const isUsuario = ref(
     sessionStorage.getItem('isUsuario') === 'true'
 )
@@ -110,13 +124,21 @@ const isAdmin = ref(
 )
 
 const calcularPrecioFinal = () => {
+    // Reiniciar valores
+    montoDescuento.value = 0
+    gastosEnvio.value = 0
+    
+    // Calcular descuento si se aplica el código
     if (codigoDescuento.value === "DESCUENTO") {
+        montoDescuento.value = cesta.totalPrecio * 0.1 // 10% de descuento
         precioFinal.value = cesta.totalPrecio * 0.9
     } else {
         precioFinal.value = cesta.totalPrecio
     }
 
+    // Calcular gastos de envío si el total es menor de 50€
     if (precioFinal.value < 50) {
+        gastosEnvio.value = precioFinal.value * 0.05 // 5% de gastos de envío
         precioFinal.value = precioFinal.value * 1.05
     }
 }
