@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex flex-column justify-content-center align-items-center vh-75 mt-5">
+  <div class="d-flex flex-column justify-content-center align-items-center vh-75 mt-5 position-relative">
     <div class="text-center mb-4">
       <h5 class="fw-bold text-uppercase  position-relative d-inline-block" style="color: #1F2937;">
         <i class="bi bi-people-fill me-2 fs-3"></i>
@@ -24,6 +24,16 @@
           <button type="submit" class="btn btn-primary w-50">Iniciar sesión</button>
         </div>
       </form>
+    </div>
+
+    <!-- Cuadro de credenciales de prueba -->
+    <div class="mt-4 p-3 bg-light border rounded shadow-sm text-center" style="font-size: 0.85rem; max-width: 400px;">
+      <p class="mb-1 fw-bold text-primary"><i class="bi bi-info-circle me-1"></i>Credenciales de prueba:</p>
+      <p class="mb-1"><strong>DNI Admin:</strong> 55555555K</p>
+      <p class="mb-1"><strong>Password:</strong> abc123</p>
+      <hr class="my-2">
+      <p class="mb-1"><strong>DNI Admin:</strong> Y1234567X</p>
+      <p class="mb-0"><strong>Password:</strong> abc123</p>
     </div>
   </div>
 </template>
