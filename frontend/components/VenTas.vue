@@ -59,6 +59,16 @@
                         <span v-else class="badge bg-secondary ms-2">
                             <i class="bi bi-lock me-1"></i> No disponible
                         </span>
+                        
+                        <!-- Botón Reservar: solo si está disponible y logueado -->
+                        <button
+                            v-if="car.estado === 'disponible' && isLogueado"
+                            class="btn badge btn-sm btn-warning ms-2"
+                            @click.stop="abrirModalReserva(car)"
+                            title="Reservar este vehículo">
+                            <i class="bi bi-bookmark me-1"></i> Reservar
+                        </button>
+                        
                         <button
                             class="btn badge btn-sm btn-dark ms-2"
                             @click.stop="imprimirFichaVehiculo(car)"
@@ -71,14 +81,42 @@
         </div>
     </div>
 
+    <!-- MODAL DE RESERVA -->
+    <div v-if="mostrarModalReserva" class="modal-overlay" @click.self="mostrarModalReserva = false">
+        <div class="modal-contenido">
+            <h4 class="mb-3">Reservar: {{ vehiculoSeleccionado?.marca }} {{ vehiculoSeleccionado?.modelo }}</h4>
+            <form @submit.prevent="handleReservar">
+                <div class="mb-3">
+                    <label class="form-label">Nombre completo</label>
+                    <input v-model="formReserva.nombre" type="text" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Teléfono</label>
+                    <input v-model="formReserva.telefono" type="tel" class="form-control" required />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input v-model="formReserva.email" type="email" class="form-control" required />
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-warning" :disabled="reservando">
+                        <span v-if="reservando" class="spinner-border spinner-border-sm me-1"></span>
+                        {{ reservando ? 'Reservando...' : 'Confirmar Reserva' }}
+                    </button>
+                    <button type="button" class="btn btn-secondary" @click="mostrarModalReserva = false">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </template>
 <script setup>
 import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
-import { getArticulos } from "@/api/articulos.js";
+import { getArticulos, reservarArticulo } from "@/api/articulos.js";
 import { useCestaStore } from "../store/cesta";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 const cestaStore = useCestaStore();
@@ -86,6 +124,21 @@ const cestaStore = useCestaStore();
 const vehiculos = ref([]);
 const filtroMarca = ref('');
 const ordenAZ = ref(false);
+
+// Login / Admin check
+const isAdmin = ref(sessionStorage.getItem('isAdmin') === 'true');
+const isUsuario = ref(sessionStorage.getItem('isUsuario') === 'true');
+const isLogueado = ref(isUsuario.value || isAdmin.value);
+
+// Modal reserva
+const mostrarModalReserva = ref(false);
+const reservando = ref(false);
+const vehiculoSeleccionado = ref(null);
+const formReserva = ref({
+    nombre: '',
+    telefono: '',
+    email: ''
+});
 
 const vehiculosFiltrados = computed(() => {
      const marca = filtroMarca.value.trim().toLowerCase();
@@ -125,6 +178,39 @@ const agregarACesta = (vehiculo) => {
     imagen: urlImagen (vehiculo.imagen)
     })
 }
+
+// Abrir modal de reserva
+const abrirModalReserva = (vehiculo) => {
+    vehiculoSeleccionado.value = vehiculo;
+    formReserva.value = {
+        nombre: '',
+        telefono: '',
+        email: ''
+    };
+    mostrarModalReserva.value = true;
+};
+
+// Reservar vehículo
+const handleReservar = async () => {
+    reservando.value = true;
+    try {
+        const res = await reservarArticulo(vehiculoSeleccionado.value._id, formReserva.value);
+        
+        // Actualizar el vehículo en la lista local
+        const index = vehiculos.value.findIndex(v => v._id === vehiculoSeleccionado.value._id);
+        if (index !== -1) {
+            vehiculos.value[index] = res.coche;
+        }
+        
+        mostrarModalReserva.value = false;
+        Swal.fire('Reservado', 'El vehículo ha sido reservado correctamente', 'success');
+    } catch (err) {
+        const msg = err.response?.data?.error || 'Error al reservar';
+        Swal.fire('Error', msg, 'error');
+    } finally {
+        reservando.value = false;
+    }
+};
 
 /**
  * FUNCIÓN: imprimirFichaVehiculo
@@ -369,5 +455,28 @@ const imprimirFichaVehiculo = (vehiculo) => {
 .card-title{
     font-weight: bold;
     text-transform: capitalize;
+}
+
+/* Modal overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1050;
+}
+
+.modal-contenido {
+    background: white;
+    padding: 2rem;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 450px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 </style>
